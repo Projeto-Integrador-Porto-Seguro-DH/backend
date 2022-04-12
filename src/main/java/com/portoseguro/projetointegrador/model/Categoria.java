@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 	@NotNull(message = "O campo descrição precisa ser preenchido")
 	@Size(min = 10, max = 255, message = "O campo descrição deve conter entre 10 e 255 caracteres")
 	@Column(name = "descricao_categoria")
-    private Long descricaoCategoria;
+    private String descricaoCategoria;
 
 	public Long getIdCategoria() {
 		return idCategoria;
@@ -44,11 +44,11 @@ import javax.validation.constraints.Size;
 		this.nomeCategoria = nomeCategoria;
 	}
 
-	public Long getDescricaoCategoria() {
+	public String getDescricaoCategoria() {
 		return descricaoCategoria;
 	}
 
-	public void setDescricaoCategoria(Long descricaoCategoria) {
+	public void setDescricaoCategoria(String descricaoCategoria) {
 		this.descricaoCategoria = descricaoCategoria;
 	}
     
