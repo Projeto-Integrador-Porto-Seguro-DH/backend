@@ -20,7 +20,7 @@ public class Usuario {
 	private Long idUsuario;
 
 	@NotNull(message = "O campo nome não pode ficar em branco")
-	@Size(min = 3, max = 255, message = "O campo nome deve conter entre 10 e 255 caracteres")
+	@Size(min = 1, max = 255, message = "O campo nome deve conter entre 1 e 255 caracteres")
 	@Column(name = "nome_usuario")
 	private String nomeUsuario;
 	
@@ -30,12 +30,10 @@ public class Usuario {
     @Email(message = "O campo email deve conter o caracter '@'")
 	private String emailUsuario;
 	
-	
 	@NotNull(message = "O campo CPF não pode ficar em branco")
 	@Size(min= 11, max = 11, message = "O campo CPF deve conter 11 caracteres")
 	@Column(name = "cpf_usuario")
 	private String cpfUsuario;
-
 
 	@NotNull(message = "O campo senha não pode ficar em branco")
 	@Size(min = 8, max = 16, message = "O campo senha deve conter entre 8 e 16 caracteres")
@@ -43,7 +41,7 @@ public class Usuario {
 	private String senhaUsuario;
 	
 	@NotNull(message = "O campo endereço não pode ficar em branco")
-	@Size(min = 10, max = 255, message = "O campo endereço deve conter entre 10 e 255 caracteres")
+	@Size(min = 5, max = 255, message = "O campo endereço deve conter entre 5 e 255 caracteres")
 	@Column(name = "endereco_usuario")	
     private String enderecoUsuario;
 	
