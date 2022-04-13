@@ -34,43 +34,35 @@ public class CategoriaController {
 
 	@GetMapping("/id/{id}")
 	public ResponseEntity<Categoria> getById(@PathVariable Long id) {
-		Optional<Categoria> categoriaModel = categoriaRepository.findById(id);
-		
-		if (!categoriaModel.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		return new ResponseEntity<Categoria>(categoriaRepository.getById(id), HttpStatus.OK);
+		return categoriaRepository.findById(id)
+				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.getById(id)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/{nome}")
-	public ResponseEntity<List<Categoria>> getById(@PathVariable String nome) {
-		List<Categoria> categoriaModel = categoriaRepository.findAllByNomeCategoriaContainingIgnoreCase(nome);
-		
-		if (categoriaModel.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
-		return new ResponseEntity<List<Categoria>>(categoriaModel, HttpStatus.OK);
+	@GetMapping("/nome/{nome}")
+	public ResponseEntity<Optional<Categoria>> getByNome(@PathVariable String nome) {
+		return categoriaRepository.findByNomeCategoriaIgnoreCase(nome)
+				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.findByNomeCategoriaIgnoreCase(nome)))
+				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria){
+	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("/deletar/{id}")
-	public ResponseEntity<?> deleteCategoria(@PathVariable Long id){
+	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
 		return categoriaRepository.findById(id).map(resposta -> {
-            categoriaRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }).orElse(ResponseEntity.notFound().build());
+			categoriaRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}).orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@PutMapping("/atualizar")
-	public ResponseEntity<Categoria> putCategoria(@RequestBody @Valid Categoria categoria){
+	public ResponseEntity<Categoria> putCategoria(@RequestBody @Valid Categoria categoria) {
 		return categoriaRepository.findById(categoria.getIdCategoria())
-                .map(resposta -> ResponseEntity.ok().body(categoriaRepository.save(categoria)))
-                .orElse(ResponseEntity.notFound().build());
+				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.save(categoria)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 }
