@@ -12,6 +12,7 @@ local.properties
 .recommenders
 
 # Maven
+src/main/resources/application.properties
 log/
 target/
 pom.xml.tag
