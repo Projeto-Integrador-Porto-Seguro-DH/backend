@@ -37,7 +37,7 @@ public class EnvioController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		this.envioRepository.save(envio);
-		pedido.get().setCodigoEnvio(envio.getIdEnvio().intValue());
+		pedido.get().setCodigoEnvio(envio.getIdEnvio());
 		this.pedidoRepository.save(pedido.get());
 		return ResponseEntity.ok(envio);
 	}

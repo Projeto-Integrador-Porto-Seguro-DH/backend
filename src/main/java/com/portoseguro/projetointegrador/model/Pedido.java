@@ -23,9 +23,8 @@ public class Pedido {
 	private boolean estadoPedido;
 	
 	@NotNull(message = "O campo código de envio do pedido deve ser preenchido")
-	@Size(min = 4, max = 15, message = "O campo código de envio deve conter entre 10 e 255 caracteres")
 	@Column(name = "codigo_envio")
-	private int codigoEnvio;
+	private Long codigoEnvio;
 
 	public Long getIdPedido() {
 		return idPedido;
@@ -43,11 +42,11 @@ public class Pedido {
 		this.estadoPedido = estadoPedido;
 	}
 
-	public int getCodigoEnvio() {
+	public Long getCodigoEnvio() {
 		return codigoEnvio;
 	}
 
-	public void setCodigoEnvio(int codigoEnvio) {
+	public void setCodigoEnvio(Long codigoEnvio) {
 		this.codigoEnvio = codigoEnvio;
 	}
 	
