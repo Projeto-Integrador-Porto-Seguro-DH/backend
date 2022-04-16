@@ -1,8 +1,5 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,15 +12,12 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario implements Serializable {
-	
-	//Default serial version Id
-	private static final long serialVersionUID = 1L;
+public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "codigo_usuario")
-	private UUID idUsuario;
+	private long idUsuario;
 
 	@NotNull(message = "O campo Nome não pode ficar em branco")
 	@Size(min = 5, max = 255, message = "O campo nome deve conter entre 5 e 255 caracteres")
@@ -51,11 +45,11 @@ public class Usuario implements Serializable {
     @Column(name = "senha_usuario")
 	private String senhaUsuario;
 
-	public UUID getIdUsuario() {
+	public Long getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(UUID idUsuario) {
+	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 
@@ -98,8 +92,7 @@ public class Usuario implements Serializable {
 	public void setSenhaUsuario(String senhaUsuario) {
 		this.senhaUsuario = senhaUsuario;
 	}
-	
-	
+
 }
 
 
