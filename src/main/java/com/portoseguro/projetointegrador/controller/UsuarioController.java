@@ -22,43 +22,54 @@ import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/usuario")
 public class UsuarioController {
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	
+
 	@GetMapping
 	public ResponseEntity<List<Usuario>> GetAllByUsuario() {
 		return ResponseEntity.ok(usuarioRepository.findAll());
 	}
-	
+
 	@GetMapping("/{idUsuario}")
-	public ResponseEntity<Usuario> getById(@PathVariable long id) {
-		return usuarioRepository.findById(id)
-				.map(resp -> ResponseEntity.ok(resp))
+	public ResponseEntity<Usuario> getAllById(@PathVariable long id) {
+		return usuarioRepository.findById(id).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@GetMapping("/nome/{nomeUsuario}")
-	public ResponseEntity<List<Usuario>> getByName(@PathVariable String nomeUsuario) {
+	public ResponseEntity<List<Usuario>> getByNomeUsuario(@PathVariable String nomeUsuario) {
 		return ResponseEntity.ok(usuarioRepository.findAllByNomeUsuarioContainingIgnoreCase(nomeUsuario));
-		
 	}
 	
+	@GetMapping("/cpf/{cpfUsuario}")
+	public ResponseEntity<List<Usuario>> getByCpfUsuario(@PathVariable String cpfUsuario) {
+		return ResponseEntity.ok(usuarioRepository.findAllByCpfUsuarioContainingIgnoreCase(cpfUsuario));
+	}
+	
+	@GetMapping("/endereco/{enderecoUsuario}")
+	public ResponseEntity<List<Usuario>> getByEnderecoUsuario(@PathVariable String enderecoUsuario) {
+		return ResponseEntity.ok(usuarioRepository.findAllByEnderecoUsuarioContainingIgnoreCase(enderecoUsuario));
+	}
+	
+	@GetMapping("/email/{emailUsuario}")
+	public ResponseEntity<List<Usuario>> getByEmailcoUsuario(@PathVariable String emailUsuario) {
+		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
+	}
+
 	@PostMapping
-	public ResponseEntity<Usuario> post(@RequestBody Usuario nomeUsuario) {
+	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
 	}
-	
-	
+
 	@PutMapping
-	public ResponseEntity<Usuario> put(@RequestBody Usuario nomeUsuario) {
+	public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(nomeUsuario));
 	}
-	
-	@DeleteMapping("/{idUsuario}")
-	public void delete(@PathVariable long id) {
-		usuarioRepository.deleteById(id);
+
+	@DeleteMapping("/deletar/{idUsuario}")
+	public void delete(@PathVariable long idUsuario) {
+		usuarioRepository.deleteById(idUsuario);
 	}
-		
+
 }

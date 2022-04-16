@@ -10,6 +10,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
@@ -37,11 +39,12 @@ public class Usuario {
 	@NotNull(message = "O campo Email não pode ficar em branco")
 	@Size(min = 10, max = 255, message = "O campo Email deve conter entre 10 e 255 caracteres")
 	@Column(name = "email_usuario", unique = true)
-    @Email(message = "O campo email deve conter o caracter '@'")
+    @Email(message = "O campo Email deve conter o caracter '@'")
 	private String emailUsuario;
 	
+	@JsonIgnore
 	@NotNull(message = "O campo Senha não pode ficar em branco")
-	@Size(min = 8, max = 16, message = "O campo senha deve conter entre 8 e 16 caracteres")
+	@Size(min = 8, max = 16, message = "O campo Senha deve conter entre 8 e 16 caracteres")
     @Column(name = "senha_usuario")
 	private String senhaUsuario;
 
