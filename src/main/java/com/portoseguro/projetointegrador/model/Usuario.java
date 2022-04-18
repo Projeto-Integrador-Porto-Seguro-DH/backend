@@ -1,7 +1,5 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,14 +52,13 @@ public class Usuario {
 	private String senhaUsuario;
 
 	@OneToOne
-	private List<Pedido> pedido;
-	
+	private Pedido pedido;
 
 	public Long getIdUsuario() {
 		return idUsuario;
 	}
-
-	public void setIdUsuario(Long idUsuario) {
+	
+	public void setIdUsuario(long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 
@@ -104,14 +101,15 @@ public class Usuario {
 	public void setSenhaUsuario(String senhaUsuario) {
 		this.senhaUsuario = senhaUsuario;
 	}
-	
-	public List<Pedido> getPedido() {
+
+	public Pedido getPedido() {
 		return pedido;
 	}
 
-	public void setPedido(List<Pedido> pedido) {
+	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
 	}
+	
 
 }
 

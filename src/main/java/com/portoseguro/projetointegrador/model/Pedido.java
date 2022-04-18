@@ -1,5 +1,7 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +33,7 @@ public class Pedido {
 	private Long codigoEnvio;
 	
 	@OneToMany
-	private DetalhePedido detalhePedido;
+	private List<DetalhePedido> detalhePedido;
 	
 	@OneToOne
 	private Envio envio;
@@ -63,12 +65,20 @@ public class Pedido {
 		this.codigoEnvio = codigoEnvio;
 	}
 
-	public DetalhePedido getDetalhePedido() {
+	public List<DetalhePedido> getDetalhePedido() {
 		return detalhePedido;
 	}
 
-	public void setDetalhePedido(DetalhePedido detalhePedido) {
+	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
 		this.detalhePedido = detalhePedido;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Envio getEnvio(){

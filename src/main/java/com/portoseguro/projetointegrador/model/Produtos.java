@@ -54,13 +54,13 @@ public class Produtos {
 	
 	@OneToMany
 	private List<DetalhePedido> detalhePedido;
-
-	public Long getId() {
+	
+	public Long getIdProduto() {
 		return idProduto;
 	}
 
-	public void setId(Long id) {
-		this.idProduto = id;
+	public void setIdProduto(Long idProduto) {
+		this.idProduto = idProduto;
 	}
 
 	public String getNomeProduto() {
