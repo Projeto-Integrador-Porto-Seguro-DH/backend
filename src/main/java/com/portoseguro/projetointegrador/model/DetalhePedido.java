@@ -8,14 +8,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_detalhePedido")
+@JsonIgnoreProperties("detalhePedido")
 public class DetalhePedido {
 
 	@Id
@@ -50,6 +53,12 @@ public class DetalhePedido {
 	@Column(name = "dataEnvio_detalhePedido")
 	private Date dataEnvio;
 
+	@ManyToOne
+	private Pedido pedido;
+	
+	@ManyToOne
+	private Produtos produtos;
+	
 	public Long getIdDetalhePedido() {
 		return idDetalhePedido;
 	}
@@ -97,7 +106,22 @@ public class DetalhePedido {
 	public void setDataEnvio(Date dataEnvio) {
 		this.dataEnvio = dataEnvio;
 	}
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
 	
+	public Produtos getProdutos() {
+		return produtos;
+	}
+	
+	public void setProdutos(Produtos produtos) {
+		this.produtos = produtos;
+	}
 	
 	
 }
