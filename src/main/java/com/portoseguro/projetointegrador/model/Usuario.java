@@ -1,19 +1,24 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_usuario")
+@JsonIgnoreProperties("usuario")
 public class Usuario {
 
 	@Id
@@ -47,6 +52,10 @@ public class Usuario {
 	@Size(min = 8, max = 16, message = "O campo Senha deve conter entre 8 e 16 caracteres")
     @Column(name = "senha_usuario")
 	private String senhaUsuario;
+
+	@OneToOne
+	private List<Pedido> pedido;
+	
 
 	public Long getIdUsuario() {
 		return idUsuario;
@@ -94,6 +103,14 @@ public class Usuario {
 
 	public void setSenhaUsuario(String senhaUsuario) {
 		this.senhaUsuario = senhaUsuario;
+	}
+	
+	public List<Pedido> getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(List<Pedido> pedido) {
+		this.pedido = pedido;
 	}
 
 }

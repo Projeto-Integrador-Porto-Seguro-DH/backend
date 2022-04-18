@@ -5,12 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_pedido")
+@JsonIgnoreProperties("pedido")
 public class Pedido {
 
 	@Id
@@ -25,6 +29,15 @@ public class Pedido {
 	@NotNull(message = "O campo código de envio do pedido deve ser preenchido")
 	@Column(name = "codigo_envio")
 	private Long codigoEnvio;
+	
+	@OneToMany
+	private DetalhePedido detalhePedido;
+	
+	@OneToOne
+	private Envio envio;
+
+	@OneToOne
+	private Usuario usuario;
 
 	public Long getIdPedido() {
 		return idPedido;
@@ -48,6 +61,22 @@ public class Pedido {
 
 	public void setCodigoEnvio(Long codigoEnvio) {
 		this.codigoEnvio = codigoEnvio;
+	}
+
+	public DetalhePedido getDetalhePedido() {
+		return detalhePedido;
+	}
+
+	public void setDetalhePedido(DetalhePedido detalhePedido) {
+		this.detalhePedido = detalhePedido;
+	}
+
+	public Envio getEnvio(){
+		return envio;
+	}
+
+	public void setEnvio(Envio envio){
+		this.envio = envio;
 	}
 	
 }
