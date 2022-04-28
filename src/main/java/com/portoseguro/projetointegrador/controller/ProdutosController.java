@@ -46,6 +46,11 @@ public class ProdutosController {
 	public ResponseEntity<Produtos> postProdutos(@RequestBody Produtos produtos) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.save(produtos));
 	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<Produtos>> postListaProdutos(@RequestBody List<Produtos> produtos) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.saveAll(produtos));
+	}
 
 	@PutMapping
 	public ResponseEntity<Produtos> putProdutos(@RequestBody Produtos produtos) {

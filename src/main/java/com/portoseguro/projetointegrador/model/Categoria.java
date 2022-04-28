@@ -34,7 +34,7 @@ public class Categoria {
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
 
-	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.PERSIST)
 	@JsonIgnoreProperties(value = {"categoria", "detalhePedido"})
 	private List<Produtos> produtos;
 

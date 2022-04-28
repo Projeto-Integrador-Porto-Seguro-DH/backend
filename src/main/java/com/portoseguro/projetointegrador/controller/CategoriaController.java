@@ -50,6 +50,11 @@ public class CategoriaController {
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
 	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<Categoria>> postListaCategoria(@RequestBody @Valid List<Categoria> categoria) {
+		return new ResponseEntity<List<Categoria>>(categoriaRepository.saveAll(categoria), HttpStatus.CREATED);
+	}
 
 	@DeleteMapping("/deletar/{id}")
 	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
