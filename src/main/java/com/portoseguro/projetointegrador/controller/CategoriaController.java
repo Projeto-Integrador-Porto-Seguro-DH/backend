@@ -55,7 +55,7 @@ public class CategoriaController {
 	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
 		return categoriaRepository.findById(id).map(resposta -> {
 			categoriaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			return ResponseEntity.status(HttpStatus.OK).build();
 		}).orElse(ResponseEntity.notFound().build());
 	}
 

@@ -20,7 +20,7 @@ import com.portoseguro.projetointegrador.model.Pedido;
 
 @RestController
 @RequestMapping("/pedido")
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PedidoController {
 	
 	@Autowired

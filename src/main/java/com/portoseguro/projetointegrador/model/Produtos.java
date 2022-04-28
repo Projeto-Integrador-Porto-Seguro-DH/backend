@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -51,11 +50,10 @@ public class Produtos {
 	private BigDecimal precoProduto;
 
 	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("produtos")
 	private List<DetalhePedido> detalhePedido;
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonIgnoreProperties(value = {"produtos"})
 	private Categoria categoria;
 
 	public Long getIdProduto() {

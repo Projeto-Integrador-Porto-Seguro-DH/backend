@@ -19,8 +19,8 @@ import com.portoseguro.projetointegrador.model.Usuario;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/usuario")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioController {
 
 	@Autowired
@@ -32,8 +32,8 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/{idUsuario}")
-	public ResponseEntity<Usuario> getAllById(@PathVariable long id) {
-		return usuarioRepository.findById(id).map(resp -> ResponseEntity.ok(resp))
+	public ResponseEntity<Usuario> getAllById(@PathVariable long idUsuario) {
+		return usuarioRepository.findById(idUsuario).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
@@ -60,6 +60,11 @@ public class UsuarioController {
 	@PostMapping
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
+	}
+	
+	@PostMapping("/lista/")
+	public ResponseEntity<List<Usuario>> postListaUsuario(@RequestBody List<Usuario> nomeUsuario) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
 	}
 
 	@PutMapping
