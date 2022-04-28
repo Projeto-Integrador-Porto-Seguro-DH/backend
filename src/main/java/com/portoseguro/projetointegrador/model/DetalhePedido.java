@@ -1,7 +1,6 @@
 package com.portoseguro.projetointegrador.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,16 +41,6 @@ public class DetalhePedido {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
 	private BigDecimal subTotal;
-	
-	@NotNull(message = "O campo data deve ser preenchido")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "dataPedido_detalhePedido")
-	private Date dataPedido;
-	
-	@NotNull(message = "O campo data deve ser preenchido")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "dataEnvio_detalhePedido")
-	private Date dataEnvio;
 
 	@ManyToOne
 	private Pedido pedido;
@@ -91,22 +80,6 @@ public class DetalhePedido {
 		this.subTotal = subTotal;
 	}
 
-	public Date getDataPedido() {
-		return dataPedido;
-	}
-
-	public void setDataPedido(Date dataPedido) {
-		this.dataPedido = dataPedido;
-	}
-
-	public Date getDataEnvio() {
-		return dataEnvio;
-	}
-
-	public void setDataEnvio(Date dataEnvio) {
-		this.dataEnvio = dataEnvio;
-	}
-
 	public Pedido getPedido() {
 		return pedido;
 	}
@@ -122,6 +95,5 @@ public class DetalhePedido {
 	public void setProdutos(Produtos produtos) {
 		this.produtos = produtos;
 	}
-	
 	
 }
