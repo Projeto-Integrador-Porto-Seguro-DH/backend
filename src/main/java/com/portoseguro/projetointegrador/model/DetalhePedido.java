@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_detalhePedido")
-@JsonIgnoreProperties("detalhePedido")
 public class DetalhePedido {
 
 	@Id
@@ -43,9 +42,11 @@ public class DetalhePedido {
 	private BigDecimal subTotal;
 
 	@ManyToOne
+	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
 	
 	@ManyToOne
+	@JsonIgnoreProperties("detalhePedido")
 	private Produtos produtos;
 	
 	public Long getIdDetalhePedido() {

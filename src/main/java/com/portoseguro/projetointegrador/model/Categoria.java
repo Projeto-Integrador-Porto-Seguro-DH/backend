@@ -2,6 +2,7 @@ package com.portoseguro.projetointegrador.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +13,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tb_categoria")
-@JsonIgnoreProperties("categoria")
 public class Categoria {
 
 	@Id
@@ -34,8 +34,9 @@ public class Categoria {
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
 
-	@OneToMany
-	private List<Produtos> produto;
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Produtos> produtos;
 
 	public Long getIdCategoria() {
 		return idCategoria;
@@ -61,11 +62,11 @@ public class Categoria {
 		this.descricaoCategoria = descricaoCategoria;
 	}
 
-	public List<Produtos> getProduto() {
-		return produto;
+	public List<Produtos> getProdutos() {
+		return produtos;
 	}
 
-	public void setProduto(List<Produtos> produto) {
-		this.produto = produto;
+	public void setProdutos(List<Produtos> produtos) {
+		this.produtos = produtos;
 	}
 }

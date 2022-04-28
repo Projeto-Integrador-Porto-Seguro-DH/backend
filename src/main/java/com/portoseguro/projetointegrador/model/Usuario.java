@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_usuario")
-@JsonIgnoreProperties("usuario")
 public class Usuario {
 
 	@Id
@@ -52,6 +51,7 @@ public class Usuario {
 	private String senhaUsuario;
 
 	@OneToOne
+	@JsonIgnoreProperties("usuario")
 	private Pedido pedido;
 
 	public Long getIdUsuario() {

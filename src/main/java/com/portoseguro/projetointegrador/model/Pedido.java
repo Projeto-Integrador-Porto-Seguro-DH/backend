@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_pedido")
-@JsonIgnoreProperties(value = {"detalhePedido"})
 public class Pedido {
 
 	@Id
@@ -52,11 +52,13 @@ public class Pedido {
 	@Column(name = "valorEnvio_envio")
 	private BigDecimal valorEnvio;
 
-	@OneToMany
-	private List<DetalhePedido> detalhePedido;
-
 	@OneToOne
+	@JsonIgnoreProperties("pedido")
 	private Usuario usuario;
+	
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties("detalhePedido")
+	private List<DetalhePedido> detalhePedido;
 
 	public Long getIdPedido() {
 		return idPedido;
