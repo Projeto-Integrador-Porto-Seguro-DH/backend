@@ -15,6 +15,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -50,6 +53,7 @@ public class Produtos {
 	private BigDecimal precoProduto;
 
 	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Categoria categoria;
 	
 	@OneToMany

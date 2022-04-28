@@ -39,10 +39,10 @@ public class CategoriaController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/nome/{nome}")
-	public ResponseEntity<Optional<Categoria>> getByNome(@PathVariable String nome) {
-		return categoriaRepository.findByNomeCategoriaIgnoreCase(nome)
-				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.findByNomeCategoriaIgnoreCase(nome)))
+	@GetMapping("/nome/{nomeCategoria}")
+	public ResponseEntity<Optional<Categoria>> getByNome(@PathVariable String nomeCategoria) {
+		return categoriaRepository.findByNomeCategoriaIgnoreCase(nomeCategoria)
+				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.findByNomeCategoriaIgnoreCase(nomeCategoria)))
 				.orElse(ResponseEntity.notFound().build());
 	}
 

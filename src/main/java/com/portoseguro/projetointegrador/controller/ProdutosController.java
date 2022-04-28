@@ -1,9 +1,6 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portoseguro.projetointegrador.model.Categoria;
 import com.portoseguro.projetointegrador.model.Produtos;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 
@@ -41,9 +37,9 @@ public class ProdutosController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<Produtos>> GetByNomeProduto(@PathVariable String NomeProduto) {
-		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(NomeProduto));
+	@GetMapping("/nome/{nomeProduto}")
+	public ResponseEntity<List<Produtos>> GetByNomeProduto(@PathVariable String nomeProduto) {
+		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto));
 	}
 
 	@PostMapping
