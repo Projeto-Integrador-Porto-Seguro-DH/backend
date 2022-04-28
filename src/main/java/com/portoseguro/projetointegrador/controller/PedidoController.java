@@ -22,35 +22,34 @@ import com.portoseguro.projetointegrador.model.Pedido;
 @RequestMapping("/pedido")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PedidoController {
-	
+
 	@Autowired
 	private PedidoRepository pedidoRepository;
-	
+
 	@GetMapping
-	public ResponseEntity<List<Pedido>> getAllDetalhePedido(){
+	public ResponseEntity<List<Pedido>> getAllDetalhePedido() {
 		return ResponseEntity.ok(pedidoRepository.findAll());
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Pedido> getById(@PathVariable Long id){
-		return pedidoRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
+	public ResponseEntity<Pedido> getById(@PathVariable Long id) {
+		return pedidoRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Pedido> post (@RequestBody Pedido pedido){
+	public ResponseEntity<Pedido> post(@RequestBody Pedido pedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido));
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Pedido> put (@RequestBody Pedido pedido){
+	public ResponseEntity<Pedido> put(@RequestBody Pedido pedido) {
 		return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(pedido));
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
 		pedidoRepository.deleteById(id);
 	}
-	
+
 }

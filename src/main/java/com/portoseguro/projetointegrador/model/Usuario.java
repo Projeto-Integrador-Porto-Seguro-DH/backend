@@ -1,11 +1,14 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -55,13 +58,13 @@ public class Usuario {
 
 	// RELACIONAMENTO
 	
-	@OneToOne
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = { "usuario" })
-	private Pedido pedido;
+	private List<Pedido> pedidoUsuario;
 	
 	// GETTERS E SETTERS
 
-	public Long getIdUsuario() {
+	public long getIdUsuario() {
 		return idUsuario;
 	}
 
@@ -110,12 +113,12 @@ public class Usuario {
 		this.senhaUsuario = senhaUsuario;
 	}
 
-	public Pedido getPedido() {
-		return pedido;
+	public List<Pedido> getPedidoUsuario() {
+		return pedidoUsuario;
 	}
 
-	public void setPedido(Pedido pedido) {
-		this.pedido = pedido;
+	public void setPedidoUsuario(List<Pedido> pedidoUsuario) {
+		this.pedidoUsuario = pedidoUsuario;
 	}
-
+	
 }
