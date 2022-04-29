@@ -2,6 +2,7 @@ package com.portoseguro.projetointegrador.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +17,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_categoria")
-@JsonIgnoreProperties("categoria")
 public class Categoria {
 
+	// ATRIBUTOS
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_categoria")
@@ -33,9 +35,14 @@ public class Categoria {
 	@Size(min = 10, max = 255, message = "O campo descrição deve conter entre 10 e 255 caracteres")
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
+	
+	// RELACIONAMENTOS
 
-	@OneToMany
-	private List<Produtos> produto;
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.PERSIST)
+	@JsonIgnoreProperties(value = {"categoria", "detalhePedido"})
+	private List<Produtos> produtos;
+	
+	// GETTERS E SETTERS
 
 	public Long getIdCategoria() {
 		return idCategoria;
@@ -61,11 +68,11 @@ public class Categoria {
 		this.descricaoCategoria = descricaoCategoria;
 	}
 
-	public List<Produtos> getProduto() {
-		return produto;
+	public List<Produtos> getProdutos() {
+		return produtos;
 	}
 
-	public void setProduto(List<Produtos> produto) {
-		this.produto = produto;
+	public void setProdutos(List<Produtos> produtos) {
+		this.produtos = produtos;
 	}
 }

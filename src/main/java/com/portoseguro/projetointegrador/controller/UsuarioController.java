@@ -19,8 +19,8 @@ import com.portoseguro.projetointegrador.model.Usuario;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/usuario")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioController {
 
 	@Autowired
@@ -32,8 +32,8 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/{idUsuario}")
-	public ResponseEntity<Usuario> getAllById(@PathVariable long id) {
-		return usuarioRepository.findById(id).map(resp -> ResponseEntity.ok(resp))
+	public ResponseEntity<Usuario> getAllById(@PathVariable long idUsuario) {
+		return usuarioRepository.findById(idUsuario).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
@@ -53,22 +53,27 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/email/{emailUsuario}")
-	public ResponseEntity<List<Usuario>> getByEmailcoUsuario(@PathVariable String emailUsuario) {
+	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
 	}
+	
+	@PostMapping("/lista/")
+	public ResponseEntity<List<Usuario>> postListaUsuario(@RequestBody List<Usuario> nomeUsuario) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
+	}
 
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(nomeUsuario));
 	}
 
 	@DeleteMapping("/deletar/{idUsuario}")
-	public void delete(@PathVariable long idUsuario) {
+	public void deleteUsuario(@PathVariable long idUsuario) {
 		usuarioRepository.deleteById(idUsuario);
 	}
 

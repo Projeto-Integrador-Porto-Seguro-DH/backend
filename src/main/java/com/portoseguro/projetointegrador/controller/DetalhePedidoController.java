@@ -20,35 +20,40 @@ import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 
 @RestController
 @RequestMapping("/detalhepedido")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class DetalhePedidoController {
 
 	@Autowired
 	private DetalhePedidoRepository detalhePedidoRepository;
 
 	@GetMapping
-	public ResponseEntity<List<DetalhePedido>> getAllDetalhePedido() {
+	public ResponseEntity<List<DetalhePedido>> getAllByDetalhePedido() {
 		return ResponseEntity.ok(detalhePedidoRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<DetalhePedido> getById(@PathVariable Long id) {
+	public ResponseEntity<DetalhePedido> getAllById(@PathVariable Long id) {
 		return detalhePedidoRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
-	public ResponseEntity<DetalhePedido> post(@RequestBody DetalhePedido detalhepedido) {
+	@PostMapping("/add")
+	public ResponseEntity<DetalhePedido> postDetalhePedido(@RequestBody DetalhePedido detalhepedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoRepository.save(detalhepedido));
 	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<DetalhePedido>> postListDetalhePedido(@RequestBody List<DetalhePedido> detalhepedido) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoRepository.saveAll(detalhepedido));
+	}
 
-	@PutMapping
-	public ResponseEntity<DetalhePedido> put(@RequestBody DetalhePedido detalhepedido) {
+	@PutMapping("/atualizar")
+	public ResponseEntity<DetalhePedido> putDetalhePedido(@RequestBody DetalhePedido detalhepedido) {
 		return ResponseEntity.status(HttpStatus.OK).body(detalhePedidoRepository.save(detalhepedido));
 	}
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
+	@DeleteMapping("/deletar/{id}")
+	public void deleteDetalhePedido(@PathVariable Long id) {
 		detalhePedidoRepository.deleteById(id);
 	}
 

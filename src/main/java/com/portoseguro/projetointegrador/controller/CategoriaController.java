@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import com.portoseguro.projetointegrador.repository.CategoriaRepository;
 
 @RestController
 @RequestMapping("/categorias")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CategoriaController {
 
 	@Autowired
@@ -46,16 +48,21 @@ public class CategoriaController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<Categoria>> postListaCategoria(@RequestBody @Valid List<Categoria> categoria) {
+		return new ResponseEntity<List<Categoria>>(categoriaRepository.saveAll(categoria), HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/deletar/{id}")
 	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
 		return categoriaRepository.findById(id).map(resposta -> {
 			categoriaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			return ResponseEntity.status(HttpStatus.OK).build();
 		}).orElse(ResponseEntity.notFound().build());
 	}
 

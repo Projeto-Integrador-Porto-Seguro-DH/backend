@@ -17,9 +17,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_detalhePedido")
-@JsonIgnoreProperties("detalhePedido")
 public class DetalhePedido {
 
+	// ATRIBUTOS
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "codigo_detalhePedido")
@@ -41,12 +42,18 @@ public class DetalhePedido {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
 	private BigDecimal subTotal;
+	
+	// RELACIONAMENTOS
 
 	@ManyToOne
+	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
 	
 	@ManyToOne
+	@JsonIgnoreProperties("detalhePedido")
 	private Produtos produtos;
+	
+	// GETTERS E SETTERS
 	
 	public Long getIdDetalhePedido() {
 		return idDetalhePedido;

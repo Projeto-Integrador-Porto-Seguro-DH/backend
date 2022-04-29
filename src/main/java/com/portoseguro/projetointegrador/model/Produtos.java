@@ -3,6 +3,7 @@ package com.portoseguro.projetointegrador.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,17 +16,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="tb_produto")
-@JsonIgnoreProperties("produtos")
 public class Produtos {
 
+	// ATRIBUTOS
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "codigo_produto")
@@ -52,13 +51,17 @@ public class Produtos {
 	@Column(name = "preco_produto")
 	private BigDecimal precoProduto;
 
-	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private Categoria categoria;
+	// RELACIONAMENTOS
 	
-	@OneToMany
+	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
 	private List<DetalhePedido> detalhePedido;
 	
+	@ManyToOne
+	@JsonIgnoreProperties(value = {"produtos"})
+	private Categoria categoria;
+	
+	// GETTERS E SETTERS
+
 	public Long getIdProduto() {
 		return idProduto;
 	}

@@ -20,7 +20,7 @@ import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 
 @RestController
 @RequestMapping("/produtos")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProdutosController {
 
 	@Autowired
@@ -42,12 +42,17 @@ public class ProdutosController {
 		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto));
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Produtos> postProdutos(@RequestBody Produtos produtos) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.save(produtos));
 	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<Produtos>> postListaProdutos(@RequestBody List<Produtos> produtos) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.saveAll(produtos));
+	}
 
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<Produtos> putProdutos(@RequestBody Produtos produtos) {
 		return ResponseEntity.status(HttpStatus.OK).body(produtosRepository.save(produtos));
 	}
