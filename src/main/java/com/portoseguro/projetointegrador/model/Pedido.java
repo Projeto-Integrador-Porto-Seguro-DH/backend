@@ -61,7 +61,7 @@ public class Pedido {
 	private Usuario usuario;
 	
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("detalhePedido")
+	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
 	
 	// GETTERS E SETTERS

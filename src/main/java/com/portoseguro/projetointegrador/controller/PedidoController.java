@@ -47,7 +47,7 @@ public class PedidoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.saveAll(pedido));
 	}
 
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<Pedido> put(@RequestBody Pedido pedido) {
 		return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(pedido));
 	}
