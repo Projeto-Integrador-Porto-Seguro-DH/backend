@@ -53,7 +53,7 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/email/{emailUsuario}")
-	public ResponseEntity<List<Usuario>> getByEmailcoUsuario(@PathVariable String emailUsuario) {
+	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
@@ -67,13 +67,13 @@ public class UsuarioController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
 	}
 
-	@PutMapping
+	@PutMapping("/atualizar")
 	public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(nomeUsuario));
 	}
 
 	@DeleteMapping("/deletar/{idUsuario}")
-	public void delete(@PathVariable long idUsuario) {
+	public void deleteUsuario(@PathVariable long idUsuario) {
 		usuarioRepository.deleteById(idUsuario);
 	}
 

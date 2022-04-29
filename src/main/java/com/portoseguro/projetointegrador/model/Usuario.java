@@ -56,7 +56,7 @@ public class Usuario {
 	@Column(name = "senha_usuario")
 	private String senhaUsuario;
 
-	// RELACIONAMENTO
+	// RELACIONAMENTOS
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = { "usuario" })
