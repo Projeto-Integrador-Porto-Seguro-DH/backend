@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="tb_produto")
 public class Produtos {
 
+	// ATRIBUTOS
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "codigo_produto")
@@ -49,12 +51,16 @@ public class Produtos {
 	@Column(name = "preco_produto")
 	private BigDecimal precoProduto;
 
+	// RELACIONAMENTOS
+	
 	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
 	private List<DetalhePedido> detalhePedido;
 	
 	@ManyToOne
 	@JsonIgnoreProperties(value = {"produtos"})
 	private Categoria categoria;
+	
+	// GETTERS E SETTERS
 
 	public Long getIdProduto() {
 		return idProduto;

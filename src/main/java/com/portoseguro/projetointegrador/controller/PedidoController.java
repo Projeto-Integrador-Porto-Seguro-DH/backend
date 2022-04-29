@@ -41,6 +41,11 @@ public class PedidoController {
 	public ResponseEntity<Pedido> post(@RequestBody Pedido pedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido));
 	}
+	
+	@PostMapping("/lista")
+	public ResponseEntity<List<Pedido>> postListaPedido(@RequestBody List<Pedido> pedido) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.saveAll(pedido));
+	}
 
 	@PutMapping
 	public ResponseEntity<Pedido> put(@RequestBody Pedido pedido) {
