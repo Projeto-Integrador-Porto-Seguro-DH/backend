@@ -37,7 +37,7 @@ public class DetalhePedidoController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<DetalhePedido> postDetalhePedido(@RequestBody DetalhePedido detalhepedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoRepository.save(detalhepedido));
 	}

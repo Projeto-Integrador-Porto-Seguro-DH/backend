@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "tb_categoria")
 public class Categoria {
 
+	// ATRIBUTOS
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_categoria")
@@ -33,10 +35,14 @@ public class Categoria {
 	@Size(min = 10, max = 255, message = "O campo descrição deve conter entre 10 e 255 caracteres")
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
+	
+	// RELACIONAMENTOS
 
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.PERSIST)
 	@JsonIgnoreProperties(value = {"categoria", "detalhePedido"})
 	private List<Produtos> produtos;
+	
+	// GETTERS E SETTERS
 
 	public Long getIdCategoria() {
 		return idCategoria;

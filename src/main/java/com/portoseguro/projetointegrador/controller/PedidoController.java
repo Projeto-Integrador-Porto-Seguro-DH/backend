@@ -37,7 +37,7 @@ public class PedidoController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Pedido> post(@RequestBody Pedido pedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido));
 	}

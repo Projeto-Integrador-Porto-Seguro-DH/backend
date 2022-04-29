@@ -42,7 +42,7 @@ public class ProdutosController {
 		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto));
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Produtos> postProdutos(@RequestBody Produtos produtos) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.save(produtos));
 	}

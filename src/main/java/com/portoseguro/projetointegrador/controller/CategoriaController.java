@@ -48,7 +48,7 @@ public class CategoriaController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
 	}

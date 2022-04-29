@@ -57,7 +57,7 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
 	}
