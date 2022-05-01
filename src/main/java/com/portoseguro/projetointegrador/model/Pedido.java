@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Pedido {
 
 	// ATRIBUTOS
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_pedido")
@@ -54,16 +54,16 @@ public class Pedido {
 	private BigDecimal valorEnvio;
 
 	// RELACIONAMENTOS
-	
+
 	@ManyToOne
 	@NotNull(message = "O pedido deve estar atrelado a um usuário!")
 	@JsonIgnoreProperties("pedidoUsuario")
 	private Usuario usuario;
-	
+
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
-	
+
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -129,5 +129,5 @@ public class Pedido {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
+
 }

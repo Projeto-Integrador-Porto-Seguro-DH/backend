@@ -8,9 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.portoseguro.projetointegrador.model.Produtos;
 
 @Repository
-public interface ProdutosRepository extends JpaRepository<Produtos,Long>{
+public interface ProdutosRepository extends JpaRepository<Produtos, Long> {
 
-	public List<Produtos> findAllByNomeProdutoContainingIgnoreCase (String nomeproduto);
+	public List<Produtos> findAllByNomeProdutoContainingIgnoreCase(String nomeproduto);
 
-		
 }

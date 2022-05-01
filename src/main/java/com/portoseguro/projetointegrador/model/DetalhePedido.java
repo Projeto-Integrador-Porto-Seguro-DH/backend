@@ -20,41 +20,41 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class DetalhePedido {
 
 	// ATRIBUTOS
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_detalhePedido")
 	private Long idDetalhePedido;
-	
+
 	@NotNull(message = "O campo quantidade deve ser preenchido")
 	@Positive(message = "O preço deve ser maior que 0")
 	@Column(name = "quantidadeProduto_detalhePedido")
 	private int quantidadeProduto;
-	
+
 	@NotNull(message = "O campo preço unitário deve ser preenchido")
 	@Positive(message = "O preço deve ser maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "precoUnitario_detalhePedido")
 	private BigDecimal precoUnitario;
-	
+
 	@NotNull(message = "O campo subtotal deve ser preenchido")
 	@Positive(message = "O preço deve ser maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
 	private BigDecimal subTotal;
-	
+
 	// RELACIONAMENTOS
 
 	@ManyToOne
 	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
-	
+
 	@ManyToOne
 	@JsonIgnoreProperties("detalhePedido")
 	private Produtos produtos;
-	
+
 	// GETTERS E SETTERS
-	
+
 	public Long getIdDetalhePedido() {
 		return idDetalhePedido;
 	}
@@ -94,13 +94,13 @@ public class DetalhePedido {
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
 	}
-	
+
 	public Produtos getProdutos() {
 		return produtos;
 	}
-	
+
 	public void setProdutos(Produtos produtos) {
 		this.produtos = produtos;
 	}
-	
+
 }

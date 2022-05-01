@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Usuario {
 
 	// ATRIBUTOS
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_usuario")
@@ -57,11 +57,11 @@ public class Usuario {
 	private String senhaUsuario;
 
 	// RELACIONAMENTOS
-	
+
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = { "usuario" })
 	private List<Pedido> pedidoUsuario;
-	
+
 	// GETTERS E SETTERS
 
 	public long getIdUsuario() {
@@ -120,5 +120,5 @@ public class Usuario {
 	public void setPedidoUsuario(List<Pedido> pedidoUsuario) {
 		this.pedidoUsuario = pedidoUsuario;
 	}
-	
+
 }
