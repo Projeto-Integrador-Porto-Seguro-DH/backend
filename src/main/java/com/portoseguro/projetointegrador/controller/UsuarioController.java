@@ -91,7 +91,7 @@ public class UsuarioController {
 	
 	@PostMapping("/cadastrar")
 	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
-		return usuarioService.cadastrarUsuario(usuario);
+		return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
 	}
 	
 	@PutMapping("/update")

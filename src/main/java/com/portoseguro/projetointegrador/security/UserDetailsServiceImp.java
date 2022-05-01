@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.portoseguro.projetointegrador.model.Usuario;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 
+@Service
 public class UserDetailsServiceImp implements UserDetailsService {
 	
 	@Autowired
@@ -17,7 +19,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String usuario) throws UsernameNotFoundException {
-        Optional<Usuario> user = usuarioRepository.findByUsuario(usuario);
+        Optional<Usuario> user = usuarioRepository.findByNomeUsuario(usuario);
         
         user.orElseThrow(() -> new UsernameNotFoundException(usuario + "not found"));
         
