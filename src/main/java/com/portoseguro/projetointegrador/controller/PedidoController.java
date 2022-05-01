@@ -16,45 +16,62 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
+import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 import com.portoseguro.projetointegrador.model.Pedido;
 
 @RestController
-@RequestMapping("/pedido")
+@RequestMapping("/pedidos")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PedidoController {
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+
 	@GetMapping
-	public ResponseEntity<List<Pedido>> getAllDetalhePedido() {
+	public ResponseEntity<List<Pedido>> getAllPedido() {
 		return ResponseEntity.ok(pedidoRepository.findAll());
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Pedido> getById(@PathVariable Long id) {
-		return pedidoRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
+	@GetMapping("/{idPedido}")
+	public ResponseEntity<Pedido> getAllById(@PathVariable Long idPedido) {
+		return pedidoRepository.findById(idPedido).map(resposta -> ResponseEntity.ok(resposta))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Pedido> post(@RequestBody Pedido pedido) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido));
+	public ResponseEntity<Pedido> postPedido(@RequestBody Pedido pedido) {
+		return usuarioRepository.findById(pedido.getUsuario().getIdUsuario())
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido)))
+				.orElse(ResponseEntity.notFound().build());
 	}
-	
-	@PostMapping("/lista")
+
+	/*
+	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
+	 */
+	@PostMapping("/list")
 	public ResponseEntity<List<Pedido>> postListaPedido(@RequestBody List<Pedido> pedido) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.saveAll(pedido));
 	}
 
-	@PutMapping("/atualizar")
-	public ResponseEntity<Pedido> put(@RequestBody Pedido pedido) {
-		return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(pedido));
+	@PutMapping("/update")
+	public ResponseEntity<Pedido> putPedido(@RequestBody Pedido pedido) {
+		if (pedidoRepository.existsById(pedido.getIdPedido())) {
+			if (usuarioRepository.existsById(pedido.getUsuario().getIdUsuario()))
+				return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(pedido));
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
-		pedidoRepository.deleteById(id);
+	@DeleteMapping("delete/{idPedido}")
+	public ResponseEntity<Object> deletePedido(@PathVariable Long idPedido) {
+		return pedidoRepository.findById(idPedido).map(resposta -> {
+			pedidoRepository.deleteById(idPedido);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}).orElse(ResponseEntity.notFound().build());
 	}
 
 }

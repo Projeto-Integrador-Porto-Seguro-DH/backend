@@ -34,42 +34,44 @@ public class CategoriaController {
 		return ResponseEntity.ok(categoriaRepository.findAll());
 	}
 
-	@GetMapping("/id/{id}")
-	public ResponseEntity<Categoria> getById(@PathVariable Long id) {
+	@GetMapping("{id}")
+	public ResponseEntity<Categoria> getAllById(@PathVariable Long id) {
 		return categoriaRepository.findById(id)
 				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.getById(id)))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/nome/{nomeCategoria}")
-	public ResponseEntity<Optional<Categoria>> getByNome(@PathVariable String nomeCategoria) {
-		return categoriaRepository.findByNomeCategoriaIgnoreCase(nomeCategoria)
-				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.findByNomeCategoriaIgnoreCase(nomeCategoria)))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<List<Categoria>> getByNome(@PathVariable String nomeCategoria) {
+		return ResponseEntity.ok(categoriaRepository.findAllByNomeCategoriaContainingIgnoreCase(nomeCategoria));
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
 	}
-	
-	@PostMapping("/lista")
+
+	/*
+	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
+	 */
+	@PostMapping("/list")
 	public ResponseEntity<List<Categoria>> postListaCategoria(@RequestBody @Valid List<Categoria> categoria) {
 		return new ResponseEntity<List<Categoria>>(categoriaRepository.saveAll(categoria), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/deletar/{id}")
-	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
-		return categoriaRepository.findById(id).map(resposta -> {
-			categoriaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).build();
-		}).orElse(ResponseEntity.notFound().build());
-	}
-
-	@PutMapping("/atualizar")
+	@PutMapping("/update")
 	public ResponseEntity<Categoria> putCategoria(@RequestBody @Valid Categoria categoria) {
 		return categoriaRepository.findById(categoria.getIdCategoria())
 				.map(resposta -> ResponseEntity.ok().body(categoriaRepository.save(categoria)))
 				.orElse(ResponseEntity.notFound().build());
 	}
+
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<Object> deleteCategoria(@PathVariable Long id) {
+		return categoriaRepository.findById(id).map(resposta -> {
+			categoriaRepository.deleteById(id);
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}).orElse(ResponseEntity.notFound().build());
+	}
+
 }

@@ -20,31 +20,31 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="tb_produto")
+@Table(name = "tb_produto")
 public class Produtos {
 
 	// ATRIBUTOS
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_produto")
 	private Long idProduto;
-	
+
 	@NotNull(message = "O campo nome deve ser preenchido")
 	@Size(min = 5, max = 255, message = "O campo nome do produto deve conter entre 5 e 255 caracteres")
 	@Column(name = "nome_produto")
 	private String nomeProduto;
-	
+
 	@NotNull(message = "O campo descrição deve ser preenchido")
 	@Size(min = 5, max = 255, message = "O campo descrição do produto deve conter entre 5 e 255 caracteres")
 	@Column(name = "descricao_produto")
 	private String descricaoProduto;
-	
+
 	@NotNull(message = "O campo estoque deve ser preenchido")
 	@Positive(message = "O campo estoque deve receber um valor maior que 0")
 	@Column(name = "estoque_produto")
-    private int estoqueProduto;
-	
+	private int estoqueProduto;
+
 	@NotNull(message = "O campo preço deve ser preenchido")
 	@Positive(message = "O campo preço deve receber um valor maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -52,14 +52,14 @@ public class Produtos {
 	private BigDecimal precoProduto;
 
 	// RELACIONAMENTOS
-	
+
 	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
 	private List<DetalhePedido> detalhePedido;
-	
+
 	@ManyToOne
-	@JsonIgnoreProperties(value = {"produtos"})
+	@JsonIgnoreProperties(value = { "produtos" })
 	private Categoria categoria;
-	
+
 	// GETTERS E SETTERS
 
 	public Long getIdProduto() {
@@ -101,7 +101,7 @@ public class Produtos {
 	public void setPrecoProduto(BigDecimal precoProduto) {
 		this.precoProduto = precoProduto;
 	}
-	
+
 	public Categoria getCategoria() {
 		return categoria;
 	}

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.portoseguro.projetointegrador.model.DetalhePedido;
 
 @Repository
-public interface DetalhePedidoRepository extends JpaRepository<DetalhePedido, Long>{
+public interface DetalhePedidoRepository extends JpaRepository<DetalhePedido, Long> {
 }
