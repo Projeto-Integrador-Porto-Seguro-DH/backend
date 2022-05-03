@@ -40,16 +40,16 @@ public class Produtos {
 	@Column(name = "descricao_produto")
 	private String descricaoProduto;
 
-	@NotNull(message = "O campo estoque deve ser preenchido")
-	@Positive(message = "O campo estoque deve receber um valor maior que 0")
-	@Column(name = "estoque_produto")
-	private int estoqueProduto;
-
 	@NotNull(message = "O campo preço deve ser preenchido")
 	@Positive(message = "O campo preço deve receber um valor maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "preco_produto")
-	private BigDecimal precoProduto;
+	private BigDecimal precoUnitarioProduto;
+	
+	@NotNull(message = "O campo estoque deve ser preenchido")
+	@Positive(message = "O campo estoque deve receber um valor maior que 0")
+	@Column(name = "estoque_produto")
+	private int estoqueProduto;
 
 	// RELACIONAMENTOS
 
@@ -59,7 +59,7 @@ public class Produtos {
 	@ManyToOne
 	@JsonIgnoreProperties(value = { "produtos" })
 	private Categoria categoria;
-
+	
 	// GETTERS E SETTERS
 
 	public Long getIdProduto() {
@@ -86,28 +86,20 @@ public class Produtos {
 		this.descricaoProduto = descricaoProduto;
 	}
 
+	public BigDecimal getPrecoUnitarioProduto() {
+		return precoUnitarioProduto;
+	}
+
+	public void setPrecoUnitarioProduto(BigDecimal precoUnitarioProduto) {
+		this.precoUnitarioProduto = precoUnitarioProduto;
+	}
+
 	public int getEstoqueProduto() {
 		return estoqueProduto;
 	}
 
 	public void setEstoqueProduto(int estoqueProduto) {
 		this.estoqueProduto = estoqueProduto;
-	}
-
-	public BigDecimal getPrecoProduto() {
-		return precoProduto;
-	}
-
-	public void setPrecoProduto(BigDecimal precoProduto) {
-		this.precoProduto = precoProduto;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
 	}
 
 	public List<DetalhePedido> getDetalhePedido() {
@@ -118,4 +110,13 @@ public class Produtos {
 		this.detalhePedido = detalhePedido;
 	}
 
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	
 }

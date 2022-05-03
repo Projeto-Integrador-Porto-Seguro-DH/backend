@@ -15,11 +15,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -52,7 +56,15 @@ public class Pedido {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "valorEnvio_pedido")
 	private BigDecimal valorEnvio;
-
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@Column(name = "valorTotalPedido_pedido")
+	private BigDecimal valorTotalPedido;
+	
+	@Transient
+	@Autowired
+	public DetalhePedidoRepository detalhePedidoRepository;
+	
 	// RELACIONAMENTOS
 
 	@ManyToOne
@@ -63,7 +75,7 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
-
+	
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -114,12 +126,18 @@ public class Pedido {
 		this.valorEnvio = valorEnvio;
 	}
 
-	public List<DetalhePedido> getDetalhePedido() {
-		return detalhePedido;
+	public BigDecimal getValorTotalPedido() {
+		return valorTotalPedido;
 	}
 
-	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
-		this.detalhePedido = detalhePedido;
+	public void setValorTotalPedido() {
+		BigDecimal somaSubtotal = new BigDecimal(0);
+		List<DetalhePedido> listaDeSubtotais = detalhePedidoRepository.findAllByPedido(this.idPedido);
+		
+		for(int i = 0; i < listaDeSubtotais.size(); i++ ) {
+			somaSubtotal.add(listaDeSubtotais.get(i).getSubtotal());
+		}
+		this.valorTotalPedido.add(somaSubtotal.add(getValorEnvio()));
 	}
 
 	public Usuario getUsuario() {
@@ -130,4 +148,12 @@ public class Pedido {
 		this.usuario = usuario;
 	}
 
+	public List<DetalhePedido> getDetalhePedido() {
+		return detalhePedido;
+	}
+
+	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
+		this.detalhePedido = detalhePedido;
+	}
+	
 }
