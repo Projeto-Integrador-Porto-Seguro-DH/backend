@@ -52,7 +52,6 @@ public class Usuario {
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotNull(message = "O campo Senha não pode ficar em branco")
-	@Size(min = 8, max = 16, message = "O campo Senha deve conter entre 8 e 16 caracteres")
 	@Column(name = "senha_usuario")
 	private String senhaUsuario;
 
