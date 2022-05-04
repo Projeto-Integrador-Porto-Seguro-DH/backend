@@ -29,7 +29,7 @@ public class DetalhePedido {
 	@NotNull(message = "O campo quantidade deve ser preenchido")
 	@Positive(message = "O preço deve ser maior que 0")
 	@Column(name = "quantidadeProduto_detalhePedido")
-	private int quantidadeProduto;
+	private BigDecimal quantidadeProduto;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
@@ -55,11 +55,11 @@ public class DetalhePedido {
 		this.idDetalhePedido = idDetalhePedido;
 	}
 
-	public int getQuantidadeProduto() {
+	public BigDecimal getQuantidadeProduto() {
 		return quantidadeProduto;
 	}
 
-	public void setQuantidadeProduto(int quantidadeProduto) {
+	public void setQuantidadeProduto(BigDecimal quantidadeProduto) {
 		this.quantidadeProduto = quantidadeProduto;
 	}
 
@@ -67,11 +67,10 @@ public class DetalhePedido {
 		return subtotal;
 	}
 
-	public void setSubtotal() {
-		this.subtotal.multiply(produtos.getPrecoUnitarioProduto()) ;
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
 	}
 
-	
 	public Pedido getPedido() {
 		return pedido;
 	}

@@ -1,7 +1,6 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.model.Usuario;
-import com.portoseguro.projetointegrador.model.UsuarioLogin;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 //import com.portoseguro.projetointegrador.service.UsuarioService;
 
