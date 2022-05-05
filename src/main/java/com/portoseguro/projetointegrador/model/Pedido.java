@@ -121,7 +121,7 @@ public class Pedido {
 	public BigDecimal getValorEnvio() {
 		return valorEnvio;
 	}
-
+	
 	public void setValorEnvio(BigDecimal valorEnvio) {
 		this.valorEnvio = valorEnvio;
 	}
@@ -130,14 +130,8 @@ public class Pedido {
 		return valorTotalPedido;
 	}
 
-	public void setValorTotalPedido() {
-		BigDecimal somaSubtotal = new BigDecimal(0);
-		List<DetalhePedido> listaDeSubtotais = detalhePedidoRepository.findAllByPedido(this.idPedido);
-		
-		for(int i = 0; i < listaDeSubtotais.size(); i++ ) {
-			somaSubtotal.add(listaDeSubtotais.get(i).getSubtotal());
-		}
-		this.valorTotalPedido.add(somaSubtotal.add(getValorEnvio()));
+	public void setValorTotalPedido(BigDecimal valorTotalPedido) {
+		this.valorTotalPedido = valorTotalPedido;
 	}
 
 	public Usuario getUsuario() {

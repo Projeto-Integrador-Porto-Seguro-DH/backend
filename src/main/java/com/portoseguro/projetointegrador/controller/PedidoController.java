@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
-import com.portoseguro.projetointegrador.model.Pedido;
+import com.portoseguro.projetointegrador.service.PedidoService;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -29,6 +30,9 @@ public class PedidoController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private PedidoService pedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<Pedido>> getAllPedido() {
@@ -44,7 +48,7 @@ public class PedidoController {
 	@PostMapping("/add")
 	public ResponseEntity<Pedido> postPedido(@RequestBody Pedido pedido) {
 		return usuarioRepository.findById(pedido.getUsuario().getIdUsuario())
-				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(pedido)))
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.cadastrarPedido(pedido)))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
