@@ -15,15 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -52,18 +47,13 @@ public class Pedido {
 	@Column(name = "dataEnvio_pedido")
 	private Date dataEnvio;
 
-	@Positive(message = "O valor do envio deve ser maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@Column(name = "valorEnvio_pedido")
+	@Column(name = "valorEnvio_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorEnvio;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@Column(name = "valorTotalPedido_pedido")
+	@Column(name = "valorTotalPedido_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorTotalPedido;
-	
-	@Transient
-	@Autowired
-	public DetalhePedidoRepository detalhePedidoRepository;
 	
 	// RELACIONAMENTOS
 

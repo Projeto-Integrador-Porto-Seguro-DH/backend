@@ -1,6 +1,7 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.model.Usuario;
+import com.portoseguro.projetointegrador.model.UsuarioLogin;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
-//import com.portoseguro.projetointegrador.service.UsuarioService;
+import com.portoseguro.projetointegrador.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -26,9 +28,9 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-//	@Autowired
-//	private UsuarioService usuarioService;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@GetMapping
 	public ResponseEntity<List<Usuario>> getAllUsuario() {
@@ -78,25 +80,23 @@ public class UsuarioController {
 	public ResponseEntity<List<Usuario>> postListaUsuario(@RequestBody List<Usuario> nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
 	}
-	
-//	@PostMapping("/login")
-//	public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin> user){
-//		return usuarioService
-//			.logar(user)
-//			.map(resp -> ResponseEntity.ok(resp))
-//			.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-//	}
-//	
-//	@PostMapping("/cadastrar")
-//	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
-//		return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
-//	}
-	
+
+	@PostMapping("/login")
+	public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin> user) {
+		return usuarioService.logar(user).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+	}
+
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
+		return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
+	}
+
 	@PutMapping("/update")
 	public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario usuario) {
 		return usuarioRepository.findById(usuario.getIdUsuario())
-			.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario)))
-			.orElse(ResponseEntity.notFound().build());
+				.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/delete/{idUsuario}")
