@@ -13,17 +13,17 @@ import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String usuario) throws UsernameNotFoundException {
-        Optional<Usuario> user = usuarioRepository.findByNomeUsuario(usuario);
-        
-        user.orElseThrow(() -> new UsernameNotFoundException(usuario + "not found"));
-        
-        return user.map(UserDetailsImp::new).get(); 
+		Optional<Usuario> user = usuarioRepository.findByNomeUsuario(usuario);
+
+		user.orElseThrow(() -> new UsernameNotFoundException(usuario + " não encontrado!"));
+
+		return user.map(UserDetailsImp::new).get();
 	}
-	
+
 }
