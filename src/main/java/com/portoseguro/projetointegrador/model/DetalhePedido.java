@@ -31,17 +31,9 @@ public class DetalhePedido {
 	@Column(name = "quantidadeProduto_detalhePedido")
 	private int quantidadeProduto;
 
-	@NotNull(message = "O campo preço unitário deve ser preenchido")
-	@Positive(message = "O preço deve ser maior que 0")
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@Column(name = "precoUnitario_detalhePedido")
-	private BigDecimal precoUnitario;
-
-	@NotNull(message = "O campo subtotal deve ser preenchido")
-	@Positive(message = "O preço deve ser maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
-	private BigDecimal subTotal;
+	private BigDecimal subtotal;
 
 	// RELACIONAMENTOS
 
@@ -52,7 +44,7 @@ public class DetalhePedido {
 	@ManyToOne
 	@JsonIgnoreProperties("detalhePedido")
 	private Produtos produtos;
-
+	
 	// GETTERS E SETTERS
 
 	public Long getIdDetalhePedido() {
@@ -71,20 +63,12 @@ public class DetalhePedido {
 		this.quantidadeProduto = quantidadeProduto;
 	}
 
-	public BigDecimal getPrecoUnitario() {
-		return precoUnitario;
+	public BigDecimal getSubtotal() {
+		return subtotal;
 	}
 
-	public void setPrecoUnitario(BigDecimal precoUnitario) {
-		this.precoUnitario = precoUnitario;
-	}
-
-	public BigDecimal getSubTotal() {
-		return subTotal;
-	}
-
-	public void setSubTotal(BigDecimal subTotal) {
-		this.subTotal = subTotal;
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
 	}
 
 	public Pedido getPedido() {

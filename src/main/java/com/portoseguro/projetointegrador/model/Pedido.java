@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -48,11 +47,14 @@ public class Pedido {
 	@Column(name = "dataEnvio_pedido")
 	private Date dataEnvio;
 
-	@Positive(message = "O valor do envio deve ser maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@Column(name = "valorEnvio_pedido")
+	@Column(name = "valorEnvio_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorEnvio;
-
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@Column(name = "valorTotalPedido_pedido", columnDefinition = "decimal(19,2) default '0.00'")
+	private BigDecimal valorTotalPedido;
+	
 	// RELACIONAMENTOS
 
 	@ManyToOne
@@ -63,7 +65,7 @@ public class Pedido {
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
-
+	
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -109,17 +111,17 @@ public class Pedido {
 	public BigDecimal getValorEnvio() {
 		return valorEnvio;
 	}
-
+	
 	public void setValorEnvio(BigDecimal valorEnvio) {
 		this.valorEnvio = valorEnvio;
 	}
 
-	public List<DetalhePedido> getDetalhePedido() {
-		return detalhePedido;
+	public BigDecimal getValorTotalPedido() {
+		return valorTotalPedido;
 	}
 
-	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
-		this.detalhePedido = detalhePedido;
+	public void setValorTotalPedido(BigDecimal valorTotalPedido) {
+		this.valorTotalPedido = valorTotalPedido;
 	}
 
 	public Usuario getUsuario() {
@@ -130,4 +132,12 @@ public class Pedido {
 		this.usuario = usuario;
 	}
 
+	public List<DetalhePedido> getDetalhePedido() {
+		return detalhePedido;
+	}
+
+	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
+		this.detalhePedido = detalhePedido;
+	}
+	
 }

@@ -19,6 +19,7 @@ import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
+import com.portoseguro.projetointegrador.service.DetalhePedidoService;
 
 @RestController
 @RequestMapping("/detalhepedido")
@@ -34,6 +35,9 @@ public class DetalhePedidoController {
 	@Autowired
 	private PedidoRepository pedidoRepository;
 
+	@Autowired
+	private DetalhePedidoService detalhePedidoService;
+
 	@GetMapping
 	public ResponseEntity<List<DetalhePedido>> getAllDetalhePedido() {
 		return ResponseEntity.ok(detalhePedidoRepository.findAll());
@@ -47,9 +51,11 @@ public class DetalhePedidoController {
 
 	@PostMapping("/add")
 	public ResponseEntity<DetalhePedido> postDetalhePedido(@RequestBody DetalhePedido detalhePedido) {
-		if (produtosRepository.existsById(detalhePedido.getProdutos().getIdProduto()))
-			if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido()))
-				return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoRepository.save(detalhePedido));
+		if (produtosRepository.existsById(detalhePedido.getProdutos().getIdProduto())) {
+			if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido())) {
+				return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoService.cadastarDetalhes(detalhePedido));
+			}
+		}
 
 		return ResponseEntity.notFound().build();
 	}

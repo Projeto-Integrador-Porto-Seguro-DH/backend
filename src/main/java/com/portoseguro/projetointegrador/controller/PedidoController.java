@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 import com.portoseguro.projetointegrador.repository.UsuarioRepository;
-import com.portoseguro.projetointegrador.model.Pedido;
+import com.portoseguro.projetointegrador.service.PedidoService;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -38,6 +39,9 @@ public class PedidoController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private PedidoService pedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<Pedido>> getAllPedido() {

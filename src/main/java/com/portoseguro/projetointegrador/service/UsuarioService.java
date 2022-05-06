@@ -3,7 +3,7 @@ package com.portoseguro.projetointegrador.service;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,16 +18,15 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	private static final String REGEX_SENHA = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$";
+
 	public Usuario cadastrarUsuario(Usuario usuario) {
 		Optional<Usuario> user = usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario());
-
-		String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$";
-
 		if (user.isPresent()) {
 			throw new IllegalStateException("Usuário já existente");
 		}
 
-		if (usuario.getSenhaUsuario().matches(regex)) {
+		if (usuario.getSenhaUsuario().matches(REGEX_SENHA)) {
 			String senhaEncoder = new BCryptPasswordEncoder().encode(usuario.getSenhaUsuario());
 			usuario.setSenhaUsuario(senhaEncoder);
 		} else {
