@@ -32,8 +32,7 @@ public class DetalhePedidoService {
 
 		Optional<Produtos> produtoUnitario = produtosRepository.findById(idProdutoBD);
 
-		detalhePedido.setSubtotal(produtoUnitario.get().getPrecoUnitarioProduto()
-																				.multiply(detalhePedido.getQuantidadeProduto()));
+		detalhePedido.setSubtotal(new BigDecimal(detalhePedido.getQuantidadeProduto()).multiply(produtoUnitario.get().getPrecoUnitarioProduto()));
 	}
 
 	@Transactional
