@@ -49,18 +49,18 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/cpf/{cpfUsuario}")
-	public ResponseEntity<List<Usuario>> getByCpfUsuario(@PathVariable String cpfUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByCpfUsuarioContainingIgnoreCase(cpfUsuario));
+	public ResponseEntity<Optional<Usuario>> getByCpfUsuario(@PathVariable String cpfUsuario) {
+		return ResponseEntity.ok(usuarioRepository.findByCpfUsuario(cpfUsuario));
 	}
 
-	@GetMapping("/endereco/{enderecoUsuario}")
-	public ResponseEntity<List<Usuario>> getByEnderecoUsuario(@PathVariable String enderecoUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByEnderecoUsuarioContainingIgnoreCase(enderecoUsuario));
-	}
+//	@GetMapping("/endereco/{enderecoUsuario}")
+//	public ResponseEntity<List<Usuario>> getByEnderecoUsuario(@PathVariable String enderecoUsuario) {
+//		return ResponseEntity.ok(usuarioRepository.findAllByEnderecoUsuarioContainingIgnoreCase(enderecoUsuario));
+//	}
 
 	@GetMapping("/email/{emailUsuario}")
-	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
+	public ResponseEntity<Optional<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
+		return ResponseEntity.ok(usuarioRepository.findByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
 	/*

@@ -66,11 +66,33 @@ public class Pedido {
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
 	
-	// GETTERS E SETTERS
+	// CONSTRUTORES
 
 	public Long getIdPedido() {
 		return idPedido;
 	}
+	
+	public Pedido() {
+		
+	}
+
+	public Pedido(Long idPedido, Date dataPedido,
+			@NotNull(message = "O campo status do pedido deve ser preenchido") String statusPedido, String codigoEnvio,
+			Date dataEnvio, BigDecimal valorEnvio, BigDecimal valorTotalPedido,
+			@NotNull(message = "O pedido deve estar atrelado a um usuário!") Usuario usuario,
+			List<DetalhePedido> detalhePedido) {
+		this.idPedido = idPedido;
+		this.dataPedido = dataPedido;
+		this.statusPedido = statusPedido;
+		this.codigoEnvio = codigoEnvio;
+		this.dataEnvio = dataEnvio;
+		this.valorEnvio = valorEnvio;
+		this.valorTotalPedido = valorTotalPedido;
+		this.usuario = usuario;
+		this.detalhePedido = detalhePedido;
+	}
+	
+	// GETTERS E SETTERS
 
 	public void setIdPedido(Long idPedido) {
 		this.idPedido = idPedido;

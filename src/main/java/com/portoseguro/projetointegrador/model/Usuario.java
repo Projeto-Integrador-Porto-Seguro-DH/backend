@@ -60,6 +60,29 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = { "usuario" })
 	private List<Pedido> pedidoUsuario;
+	
+	//CONSTRUTORES
+	
+	public Usuario () {
+		
+	}
+	
+	public Usuario(long idUsuario,
+			@NotNull(message = "O campo Nome não pode ficar em branco") @Size(min = 5, max = 255, message = "O campo nome deve conter entre 5 e 255 caracteres") String nomeUsuario,
+			@NotNull(message = "O campo CPF não pode ficar em branco") @Size(min = 11, max = 11, message = "O campo CPF deve conter 11 caracteres") String cpfUsuario,
+			@NotNull(message = "O campo Endereço não pode ficar em branco") @Size(min = 5, max = 255, message = "O campo Endereço deve conter entre 5 e 255 caracteres") String enderecoUsuario,
+			@NotNull(message = "O campo Email não pode ficar em branco") @Size(min = 10, max = 255, message = "O campo Email deve conter entre 10 e 255 caracteres") 
+			@Email(message = "O campo Email deve conter o caracter '@'") String emailUsuario,
+			@NotNull(message = "O campo Senha não pode ficar em branco") String senhaUsuario,
+			List<Pedido> pedidoUsuario) {
+		this.idUsuario = idUsuario;
+		this.nomeUsuario = nomeUsuario;
+		this.cpfUsuario = cpfUsuario;
+		this.enderecoUsuario = enderecoUsuario;
+		this.emailUsuario = emailUsuario;
+		this.senhaUsuario = senhaUsuario;
+		this.pedidoUsuario = pedidoUsuario;
+	}
 
 	// GETTERS E SETTERS
 
