@@ -1,5 +1,6 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_produto")
-public class Produtos {
+public class Produto  implements Serializable {
 
 	// ATRIBUTOS
 
@@ -53,7 +54,7 @@ public class Produtos {
 
 	// RELACIONAMENTOS
 
-	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
 	private List<DetalhePedido> detalhePedido;
 
 	@ManyToOne

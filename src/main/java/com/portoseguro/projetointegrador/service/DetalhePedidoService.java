@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
-import com.portoseguro.projetointegrador.model.Produtos;
+import com.portoseguro.projetointegrador.model.Produto;
 import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
@@ -28,9 +28,9 @@ public class DetalhePedidoService {
 	public PedidoRepository pedidoRepository;
 
 	public void calcularSubtotal(DetalhePedido detalhePedido) {
-		Long idProdutoBD = detalhePedido.getProdutos().getIdProduto();
+		Long idProdutoBD = detalhePedido.getProduto().getIdProduto();
 
-		Optional<Produtos> produtoUnitario = produtosRepository.findById(idProdutoBD);
+		Optional<Produto> produtoUnitario = produtosRepository.findById(idProdutoBD);
 
 		detalhePedido.setSubtotal(new BigDecimal(detalhePedido.getQuantidadeProduto()).multiply(produtoUnitario.get().getPrecoUnitarioProduto()));
 	}

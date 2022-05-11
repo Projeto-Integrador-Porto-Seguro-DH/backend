@@ -3,8 +3,6 @@ package com.portoseguro.projetointegrador.controller;
 import java.util.List;
 import java.util.Optional;
 
-import com.portoseguro.projetointegrador.model.DetalhePedido;
-import com.portoseguro.projetointegrador.model.Produtos;
 import com.portoseguro.projetointegrador.model.Usuario;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,16 +60,7 @@ public class PedidoController {
 
 		if (usuario.isPresent()){
 
-			Pedido pedidoEntity = pedidoRepository.save(pedido);
-
-			List<DetalhePedido> detalhesPedido = pedido.getDetalhePedido();
-			detalhesPedido.forEach(detalhePedido -> {
-				Optional<Produtos> produtoOptional = produtosRepository.findById(detalhePedido.getProdutos().getIdProduto());
-				produtoOptional.ifPresent(produto -> {
-					produto.setEstoqueProduto(produto.getEstoqueProduto() - detalhePedido.getQuantidadeProduto());
-					produtosRepository.save(produto);
-				});
-			});
+			Pedido pedidoEntity = this.pedidoService.cadastrarPedido(pedido);
 
 			return ResponseEntity.status(HttpStatus.OK).body(pedidoEntity);
 		}
@@ -99,19 +88,14 @@ public class PedidoController {
 
 	@DeleteMapping("delete/{idPedido}")
 	public ResponseEntity<Object> deletePedido(@PathVariable Long idPedido) {
-		return pedidoRepository.findById(idPedido).map(resposta -> {
-			List<DetalhePedido> detalhesPedido = resposta.getDetalhePedido();
-			detalhesPedido.forEach(detalhePedido -> {
-				Optional<Produtos> produtoOptional = produtosRepository.findById(detalhePedido.getProdutos().getIdProduto());
-				produtoOptional.ifPresent(produto -> {
-					produto.setEstoqueProduto(produto.getEstoqueProduto() + detalhePedido.getQuantidadeProduto());
-					produtosRepository.save(produto);
-				});
-			});
 
-			pedidoRepository.deleteById(idPedido);
+		Boolean deletedPedido = this.pedidoService.deletePedido(idPedido);
+		if (deletedPedido = true) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}).orElse(ResponseEntity.notFound().build());
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 }

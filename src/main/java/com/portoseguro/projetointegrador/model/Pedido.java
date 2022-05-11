@@ -1,20 +1,12 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_pedido")
-public class Pedido {
+public class Pedido implements Serializable {
 
 	// ATRIBUTOS
 
@@ -50,11 +42,11 @@ public class Pedido {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "valorEnvio_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorEnvio;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "valorTotalPedido_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorTotalPedido;
-	
+
 	// RELACIONAMENTOS
 
 	@ManyToOne
@@ -62,10 +54,10 @@ public class Pedido {
 	@JsonIgnoreProperties("pedidoUsuario")
 	private Usuario usuario;
 
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("pedido")
-	private List<DetalhePedido> detalhePedido;
-	
+	private List<DetalhePedido> detalhePedidos;
+
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -111,7 +103,7 @@ public class Pedido {
 	public BigDecimal getValorEnvio() {
 		return valorEnvio;
 	}
-	
+
 	public void setValorEnvio(BigDecimal valorEnvio) {
 		this.valorEnvio = valorEnvio;
 	}
@@ -132,12 +124,11 @@ public class Pedido {
 		this.usuario = usuario;
 	}
 
-	public List<DetalhePedido> getDetalhePedido() {
-		return detalhePedido;
+	public List<DetalhePedido> getDetalhePedidos() {
+		return detalhePedidos;
 	}
 
-	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
-		this.detalhePedido = detalhePedido;
+	public void setDetalhePedidos(List<DetalhePedido> detalhePedidos) {
+		this.detalhePedidos = detalhePedidos;
 	}
-	
 }

@@ -1,23 +1,17 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_detalhePedido")
-public class DetalhePedido {
+public class DetalhePedido implements Serializable {
 
 	// ATRIBUTOS
 
@@ -37,13 +31,11 @@ public class DetalhePedido {
 
 	// RELACIONAMENTOS
 
-	@ManyToOne
-	@JsonIgnoreProperties("detalhePedido")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Pedido pedido;
 
-	@ManyToOne
-	@JsonIgnoreProperties("detalhePedido")
-	private Produtos produtos;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Produto produto;
 	
 	// GETTERS E SETTERS
 
@@ -79,12 +71,11 @@ public class DetalhePedido {
 		this.pedido = pedido;
 	}
 
-	public Produtos getProdutos() {
-		return produtos;
+	public Produto getProduto() {
+		return produto;
 	}
 
-	public void setProdutos(Produtos produtos) {
-		this.produtos = produtos;
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
-
 }
