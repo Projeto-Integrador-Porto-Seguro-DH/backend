@@ -73,7 +73,16 @@ public class UsuarioController {
 
 	@PostMapping("/add")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
+
+		List<Usuario> usuarioResult = usuarioRepository.findAllByCpfUsuarioContainingIgnoreCase(nomeUsuario.getCpfUsuario());
+
+		if (usuarioResult.isEmpty()){
+			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+
+
 	}
 
 	@PostMapping("/list/")
