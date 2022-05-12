@@ -63,6 +63,10 @@ public class Usuario {
 	
 	//CONSTRUTORES
 	
+	public Usuario(long idUsuario2) {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public Usuario () {
 		
 	}

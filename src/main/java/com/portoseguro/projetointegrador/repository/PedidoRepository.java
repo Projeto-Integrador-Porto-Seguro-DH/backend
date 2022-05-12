@@ -11,13 +11,12 @@ import com.portoseguro.projetointegrador.model.Pedido;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 	
-	public Optional<Pedido> findByPedido();	
-	
-	public List<Pedido> findAllByPedido();
+	public Optional<Pedido> findByPedido(String codigoEnvio);	
 	
     public List<Pedido> findAllByPedido(Long idPedido);
     
-    public List<Pedido> findAllByUsuario();
+    //public List<Pedido> findAllByUsuario();
 	
+
 }
 

@@ -47,6 +47,7 @@ public class UsuarioRepositoryTest {
 	public void deveRetornar1Usuario() {
 		
 		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuario("Biriba");
+		
 		assertTrue(usuario.get().getNomeUsuario().equals("Biriba"));
 		
 	}
@@ -56,6 +57,7 @@ public class UsuarioRepositoryTest {
 	public void deveRetornar3Usuarios() {
 		
 		List<Usuario> listaDeUsuarios = usuarioRepository.findAllByNomeUsuarioContainingIgnoreCase("String");
+		
 		assertEquals(4,listaDeUsuarios.size());
 		assertTrue(listaDeUsuarios.get(0).getNomeUsuario().equals("Biriba"));
 		assertTrue(listaDeUsuarios.get(1).getNomeUsuario().equals("Lambada"));
@@ -67,14 +69,18 @@ public class UsuarioRepositoryTest {
 	@DisplayName("Retorna o usuário pelo Email")
 	public void deveRetornarPorEmail() {
 		Optional<Usuario> usuarioPorEmail = usuarioRepository.findByEmailUsuarioContainingIgnoreCase("faisca@gmail.com");
+		
 		assertTrue(usuarioPorEmail.get().getEmailUsuario().equals("faisca@gmail.com"));
+	
 	}
 	
 	@Test
 	@DisplayName("Retorna o usuário pelo CPF")
 	public void deveRetornarPorCPF() {
 		Optional<Usuario> usuarioPorCpf = usuarioRepository.findByCpfUsuario("455.566.677-78");
+		
 		assertTrue(usuarioPorCpf.get().getCpfUsuario().equals("455.566.677-78"));
+	
 	}
 	
 }
