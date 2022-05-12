@@ -55,6 +55,7 @@ public class Produto  implements Serializable {
 	// RELACIONAMENTOS
 
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value = { "pedido", "produto" })
 	private List<DetalhePedido> detalhePedido;
 
 	@ManyToOne
