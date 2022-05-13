@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.model.Categoria;
 import com.portoseguro.projetointegrador.repository.CategoriaRepository;
+import com.portoseguro.projetointegrador.service.CategoriaService;
 
 @RestController
 @RequestMapping("/categorias")
@@ -27,6 +28,9 @@ public class CategoriaController {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private CategoriaService categoriaService;
 
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getAllCategoria() {
@@ -42,12 +46,18 @@ public class CategoriaController {
 
 	@GetMapping("/nome/{nomeCategoria}")
 	public ResponseEntity<List<Categoria>> getByNome(@PathVariable String nomeCategoria) {
-		return ResponseEntity.ok(categoriaRepository.findAllByNomeCategoriaContainingIgnoreCase(nomeCategoria));
+		List<Categoria> buscaPorNome = categoriaRepository.findAllByNomeCategoriaContainingIgnoreCase(nomeCategoria);
+		
+		if(buscaPorNome.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		
+		return ResponseEntity.ok(buscaPorNome);
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
-		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.cadastrarCategoria(categoria));
 	}
 
 	/*

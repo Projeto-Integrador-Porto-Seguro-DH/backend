@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -32,6 +33,11 @@ public class CategoriaControllerTest {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
+	@BeforeEach
+	public void setUp() {
+		categoriaRepository.deleteAll();
+	}
 
 	@Test
 	@DisplayName("Deve retornar 200 OK ao encontrar todas as categorias")
@@ -93,6 +99,21 @@ public class CategoriaControllerTest {
 	}
 	
 	@Test
+	@DisplayName("Não deve encontrar categorias pelo nome e retornar 404 Not Found")
+	public void naoDeveEncontrarPeloNomeERetornarException() {
+		
+		String endpointPorNome = "/categorias/nome/bebida";
+		
+		ResponseEntity<List<Categoria>> respostaHttp = testRestTemplate
+				.exchange(endpointPorNome, HttpMethod.GET, null, new ParameterizedTypeReference<List<Categoria>>() {});
+		
+		List<Categoria> lista = respostaHttp.getBody();
+		
+		assertEquals(HttpStatus.NOT_FOUND, respostaHttp.getStatusCode());
+		assertThat(lista).isNull();
+	}
+	
+	@Test
 	@DisplayName("Deve criar uma Categoria e retornar 201 CREATED")
 	public void deveCriarUmaCategoria() {
 		
@@ -106,5 +127,21 @@ public class CategoriaControllerTest {
 		
 		assertThat(respostaHttp.getBody().getNomeCategoria())
 												.isEqualTo("Alimentos");
+	}
+	
+	@Test
+	@DisplayName("Se uma categoria existir, retornar 500 Internal Error")
+	public void naoCriarNovaCategoriaSeJaExistir() {
+		
+		categoriaRepository.save(new Categoria(0L, "Alimentos", "Categoria de Alimentos"));
+		
+		HttpEntity<Categoria> requisicao = new HttpEntity<>(
+				new Categoria(0L, "Alimentos", "Categoria de Alimentos"));
+		
+		ResponseEntity<Categoria> respostaHttp = testRestTemplate
+				.exchange("/categorias/add", HttpMethod.POST, requisicao, Categoria.class);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, respostaHttp.getStatusCode());
+		
 	}
 }
