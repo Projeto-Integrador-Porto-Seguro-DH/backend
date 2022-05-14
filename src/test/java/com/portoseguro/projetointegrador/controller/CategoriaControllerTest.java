@@ -4,13 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -26,6 +28,7 @@ import com.portoseguro.projetointegrador.repository.CategoriaRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoriaControllerTest {
 
 	@Autowired
@@ -40,6 +43,7 @@ public class CategoriaControllerTest {
 	}
 
 	@Test
+	@Order(1)
 	@DisplayName("Deve retornar 200 OK ao encontrar todas as categorias")
 	public void deveRetornarOkAoEncontrarTodasCategorias() {
 		ResponseEntity<?> respostaHttp = testRestTemplate.getForEntity("/categorias", ArrayList.class);
@@ -48,6 +52,7 @@ public class CategoriaControllerTest {
 	}
 
 	@Test
+	@Order(2)
 	@DisplayName("Deve encontrar categoria pelo ID e retornar 200 OK")
 	public void deveEncontrarCategoriaPeloIdERetornarOk() {
 
@@ -66,6 +71,7 @@ public class CategoriaControllerTest {
 	}
 	
 	@Test
+	@Order(3)
 	@DisplayName("Não deve encontrar categoria pelo ID e retornar 404 Not Found")
 	public void naoDeveEncontrarCategoriaPeloId() {
 		
@@ -76,6 +82,7 @@ public class CategoriaControllerTest {
 	}
 	
 	@Test
+	@Order(4)
 	@DisplayName("Deve encontrar categoria pelo Nome e retornar 200 OK")
 	public void deveEncontrarCategoriaPeloNomeERetornarOk() {
 
@@ -84,10 +91,10 @@ public class CategoriaControllerTest {
 		
 		String endpointPorNome = "/categorias/nome/bebida";
 		
-		ResponseEntity<List<Categoria>> respostaHttp = testRestTemplate
-				.exchange(endpointPorNome, HttpMethod.GET, null, new ParameterizedTypeReference<List<Categoria>>() {});
+		ResponseEntity<ArrayList<Categoria>> respostaHttp = testRestTemplate
+				.exchange(endpointPorNome, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Categoria>>() {});
 		
-		List<Categoria> lista = respostaHttp.getBody();
+		ArrayList<Categoria> lista = respostaHttp.getBody();
 		
 		assertEquals(HttpStatus.OK, respostaHttp.getStatusCode());
 		
@@ -99,21 +106,20 @@ public class CategoriaControllerTest {
 	}
 	
 	@Test
+	@Order(5)
 	@DisplayName("Não deve encontrar categorias pelo nome e retornar 404 Not Found")
-	public void naoDeveEncontrarPeloNomeERetornarException() {
+	public void naoDeveEncontrarPeloNomeERetornarNotFound() {
 		
 		String endpointPorNome = "/categorias/nome/bebida";
 		
-		ResponseEntity<List<Categoria>> respostaHttp = testRestTemplate
-				.exchange(endpointPorNome, HttpMethod.GET, null, new ParameterizedTypeReference<List<Categoria>>() {});
-		
-		List<Categoria> lista = respostaHttp.getBody();
+		ResponseEntity<ArrayList<Categoria>> respostaHttp = testRestTemplate
+				.exchange(endpointPorNome, HttpMethod.GET, null, new ParameterizedTypeReference<ArrayList<Categoria>>() {});
 		
 		assertEquals(HttpStatus.NOT_FOUND, respostaHttp.getStatusCode());
-		assertThat(lista).isNull();
 	}
 	
 	@Test
+	@Order(6)
 	@DisplayName("Deve criar uma Categoria e retornar 201 CREATED")
 	public void deveCriarUmaCategoria() {
 		
@@ -130,7 +136,8 @@ public class CategoriaControllerTest {
 	}
 	
 	@Test
-	@DisplayName("Se uma categoria existir, retornar 500 Internal Error")
+	@Order(7)
+	@DisplayName("Ao tentar cadastrar uma categoria e ela existir, retornar 500 Internal Error")
 	public void naoCriarNovaCategoriaSeJaExistir() {
 		
 		categoriaRepository.save(new Categoria(0L, "Alimentos", "Categoria de Alimentos"));
