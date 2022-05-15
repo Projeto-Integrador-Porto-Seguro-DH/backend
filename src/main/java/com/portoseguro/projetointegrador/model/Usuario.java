@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.portoseguro.projetointegrador.enums.EstadosEnum;
 
 @Entity
 @Table(name = "tb_usuario")
@@ -34,15 +35,35 @@ public class Usuario {
 	@Column(name = "nome_usuario")
 	private String nomeUsuario;
 
-	@NotNull(message = "O campo CPF não pode ficar em branco")
 	@Size(min = 11, max = 11, message = "O campo CPF deve conter 11 caracteres")
 	@Column(name = "cpf_usuario", unique = true)
 	private String cpfUsuario;
 
-	@NotNull(message = "O campo Endereço não pode ficar em branco")
 	@Size(min = 5, max = 255, message = "O campo Endereço deve conter entre 5 e 255 caracteres")
-	@Column(name = "endereco_usuario")
-	private String enderecoUsuario;
+	@Column(name = "logradouroEndereco_usuario")
+	private String logradouroEndereco;
+
+	@Size(min = 8, max = 8, message = "O Cep deve possuir 8 caracteres")
+	@Column(name = "cepEndereco_usuario")
+	private int cepEndereco;
+
+	@Column(name = "numeroEndereco_usuario")
+	private int numeroEndereco;
+
+	@Size(min = 2, max = 255, message = "O Bairro deve conter entre 2 e 255 caracteres")
+	@Column(name = "bairroEndereco_usuario")
+	private String bairroEndereco;
+
+	@Size(max = 255, message = "O Bairro deve conter no maximo 255 caracteres")
+	@Column(name = "complementoEndereco_usuario")
+	private String complementoEndereco;
+
+	@Size(min = 3, max = 255, message = "A Cidade deve conter conter entre 2 e 255 caracteres")
+	@Column(name = "cidadeEndereco_usuario")
+	private String cidadeEndereco;
+
+	@Column(name = "estadoEndereco_usuario")
+	private EstadosEnum estadoEndereco;
 
 	@NotNull(message = "O campo Email não pode ficar em branco")
 	@Size(min = 10, max = 255, message = "O campo Email deve conter entre 10 e 255 caracteres")
@@ -87,12 +108,60 @@ public class Usuario {
 		this.cpfUsuario = cpfUsuario;
 	}
 
-	public String getEnderecoUsuario() {
-		return enderecoUsuario;
+	public String getLogradouroEndereco() {
+		return logradouroEndereco;
 	}
 
-	public void setEnderecoUsuario(String enderecoUsuario) {
-		this.enderecoUsuario = enderecoUsuario;
+	public void setLogradouroEndereco(String logradouroEndereco) {
+		this.logradouroEndereco = logradouroEndereco;
+	}
+
+	public int getCepEndereco() {
+		return cepEndereco;
+	}
+
+	public void setCepEndereco(int cepEndereco) {
+		this.cepEndereco = cepEndereco;
+	}
+
+	public int getNumeroEndereco() {
+		return numeroEndereco;
+	}
+
+	public void setNumeroEndereco(int numeroEndereco) {
+		this.numeroEndereco = numeroEndereco;
+	}
+
+	public String getBairroEndereco() {
+		return bairroEndereco;
+	}
+
+	public void setBairroEndereco(String bairroEndereco) {
+		this.bairroEndereco = bairroEndereco;
+	}
+
+	public String getComplementoEndereco() {
+		return complementoEndereco;
+	}
+
+	public void setComplementoEndereco(String complementoEndereco) {
+		this.complementoEndereco = complementoEndereco;
+	}
+
+	public String getCidadeEndereco() {
+		return cidadeEndereco;
+	}
+
+	public void setCidadeEndereco(String cidadeEndereco) {
+		this.cidadeEndereco = cidadeEndereco;
+	}
+
+	public EstadosEnum getEstadoEndereco() {
+		return estadoEndereco;
+	}
+
+	public void setEstadoEndereco(EstadosEnum estadoEndereco) {
+		this.estadoEndereco = estadoEndereco;
 	}
 
 	public String getEmailUsuario() {
@@ -103,7 +172,6 @@ public class Usuario {
 		this.emailUsuario = emailUsuario;
 	}
 
-	@JsonIgnore
 	public String getSenhaUsuario() {
 		return senhaUsuario;
 	}
