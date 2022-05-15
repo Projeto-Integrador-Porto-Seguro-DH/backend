@@ -1,5 +1,6 @@
 package com.portoseguro.projetointegrador.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,14 +11,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.portoseguro.projetointegrador.enums.EstadosEnum;
+import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 
 @Entity
 @Table(name = "tb_usuario")
@@ -34,6 +39,19 @@ public class Usuario {
 	@Size(min = 5, max = 255, message = "O campo nome deve conter entre 5 e 255 caracteres")
 	@Column(name = "nome_usuario")
 	private String nomeUsuario;
+
+	@NotNull(message = "O campo Sobrenome não pode ficar em branco")
+	@Size(max = 255, message = "O campo Sobrenome deve conter no maximo 255 caracteres")
+	@Column(name = "sobrenome_usuario")
+	private String sobrenomeUsuario;
+
+	@Transient
+	private String nomeCompleto = nomeUsuario + " " + sobrenomeUsuario;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dataDeNascimento_usuario")
+	private LocalDate dataDeNascimento;
 
 	@Size(min = 11, max = 11, message = "O campo CPF deve conter 11 caracteres")
 	@Column(name = "cpf_usuario", unique = true)
@@ -65,6 +83,13 @@ public class Usuario {
 	@Column(name = "estadoEndereco_usuario")
 	private EstadosEnum estadoEndereco;
 
+	@Size(min = 9, max = 11, message = "O Telefone deve conter conter entre 9 e 11 caracteres")
+	@Column(name = "telefone_usuario")
+	private long telefoneUsuario;
+
+	@Column(name = "formasDePagamento_usuario")
+	private FormasDePagamentoEnum formasDePagamento;
+
 	@NotNull(message = "O campo Email não pode ficar em branco")
 	@Size(min = 10, max = 255, message = "O campo Email deve conter entre 10 e 255 caracteres")
 	@Column(name = "email_usuario", unique = true)
@@ -75,6 +100,9 @@ public class Usuario {
 	@NotNull(message = "O campo Senha não pode ficar em branco")
 	@Column(name = "senha_usuario")
 	private String senhaUsuario;
+
+	@Column(name = "compartilharDados_usuario")
+	private boolean compartilharDadosUsuario;
 
 	// RELACIONAMENTOS
 
@@ -98,6 +126,30 @@ public class Usuario {
 
 	public void setNomeUsuario(String nomeUsuario) {
 		this.nomeUsuario = nomeUsuario;
+	}
+
+	public String getSobrenomeUsuario() {
+		return sobrenomeUsuario;
+	}
+
+	public void setSobrenomeUsuario(String sobrenomeUsuario) {
+		this.sobrenomeUsuario = sobrenomeUsuario;
+	}
+
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+
+	public void setNomeCompleto(String nomeCompleto) {
+		this.nomeCompleto = nomeCompleto;
+	}
+
+	public LocalDate getDataDeNascimento() {
+		return dataDeNascimento;
+	}
+
+	public void setDataDeNascimento(LocalDate dataDeNascimento) {
+		this.dataDeNascimento = dataDeNascimento;
 	}
 
 	public String getCpfUsuario() {
@@ -164,6 +216,22 @@ public class Usuario {
 		this.estadoEndereco = estadoEndereco;
 	}
 
+	public long getTelefoneUsuario() {
+		return telefoneUsuario;
+	}
+
+	public void setTelefoneUsuario(long telefoneUsuario) {
+		this.telefoneUsuario = telefoneUsuario;
+	}
+
+	public FormasDePagamentoEnum getFormasDePagamento() {
+		return formasDePagamento;
+	}
+
+	public void setFormasDePagamento(FormasDePagamentoEnum formasDePagamento) {
+		this.formasDePagamento = formasDePagamento;
+	}
+
 	public String getEmailUsuario() {
 		return emailUsuario;
 	}
@@ -178,6 +246,14 @@ public class Usuario {
 
 	public void setSenhaUsuario(String senhaUsuario) {
 		this.senhaUsuario = senhaUsuario;
+	}
+
+	public boolean isCompartilharDadosUsuario() {
+		return compartilharDadosUsuario;
+	}
+
+	public void setCompartilharDadosUsuario(boolean compartilharDadosUsuario) {
+		this.compartilharDadosUsuario = compartilharDadosUsuario;
 	}
 
 	public List<Pedido> getPedidoUsuario() {
