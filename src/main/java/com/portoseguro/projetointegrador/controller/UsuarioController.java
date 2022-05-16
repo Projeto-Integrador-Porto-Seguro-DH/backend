@@ -48,37 +48,14 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioRepository.findAllByNomeUsuarioContainingIgnoreCase(nomeUsuario));
 	}
 
-	@GetMapping("/cpf/{cpfUsuario}")
-	public ResponseEntity<List<Usuario>> getByCpfUsuario(@PathVariable String cpfUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByCpfUsuarioContainingIgnoreCase(cpfUsuario));
-	}
-
-	@GetMapping("/endereco/{enderecoUsuario}")
-	public ResponseEntity<List<Usuario>> getByEnderecoUsuario(@PathVariable String enderecoUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByEnderecoUsuarioContainingIgnoreCase(enderecoUsuario));
-	}
-
 	@GetMapping("/email/{emailUsuario}")
 	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
-	/*
-	 * APÓS IMPLEMENTAÇÃO DA SECURITY SERÁ CRIADO O MÉTODO LOGAR, ONDE SERÃO
-	 * AUTENTICADOS O LOGIN E SENHA DO USUÁRO
-	 *
-	 * public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin>
-	 * usuarioLogin) { return }
-	 */
-
 	@PostMapping("/add")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
-	}
-
-	@PostMapping("/list/")
-	public ResponseEntity<List<Usuario>> postListaUsuario(@RequestBody List<Usuario> nomeUsuario) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
 	}
 
 	@PostMapping("/login")

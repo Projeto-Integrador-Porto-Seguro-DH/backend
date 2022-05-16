@@ -1,24 +1,25 @@
 package com.portoseguro.projetointegrador.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -31,14 +32,13 @@ public class Pedido {
 	@Column(name = "codigo_pedido")
 	private Long idPedido;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
 	@Column(name = "dataPedido_pedido")
-	private Date dataPedido = new Date(System.currentTimeMillis());
+	private LocalDateTime dataPedido = LocalDateTime.now();
 
 	@NotNull(message = "O campo status do pedido deve ser preenchido")
 	@Column(name = "status_pedido")
-	private String statusPedido;
+	private StatusPedidoEnum statusPedido;
 
 	@Column(name = "codigo_envio")
 	private String codigoEnvio;
@@ -50,11 +50,11 @@ public class Pedido {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "valorEnvio_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorEnvio;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "valorTotalPedido_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorTotalPedido;
-	
+
 	// RELACIONAMENTOS
 
 	@ManyToOne
@@ -62,10 +62,10 @@ public class Pedido {
 	@JsonIgnoreProperties("pedidoUsuario")
 	private Usuario usuario;
 
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("pedido")
-	private List<DetalhePedido> detalhePedido;
-	
+	private List<DetalhePedido> detalhePedidos;
+
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -76,19 +76,15 @@ public class Pedido {
 		this.idPedido = idPedido;
 	}
 
-	public Date getDataPedido() {
+	public LocalDateTime getDataPedido() {
 		return dataPedido;
 	}
 
-	public void setDataPedido(Date dataPedido) {
-		this.dataPedido = dataPedido;
-	}
-
-	public String getStatusPedido() {
+	public StatusPedidoEnum getStatusPedido() {
 		return statusPedido;
 	}
 
-	public void setStatusPedido(String statusPedido) {
+	public void setStatusPedido(StatusPedidoEnum statusPedido) {
 		this.statusPedido = statusPedido;
 	}
 
@@ -111,7 +107,7 @@ public class Pedido {
 	public BigDecimal getValorEnvio() {
 		return valorEnvio;
 	}
-	
+
 	public void setValorEnvio(BigDecimal valorEnvio) {
 		this.valorEnvio = valorEnvio;
 	}
@@ -132,12 +128,12 @@ public class Pedido {
 		this.usuario = usuario;
 	}
 
-	public List<DetalhePedido> getDetalhePedido() {
-		return detalhePedido;
+	public List<DetalhePedido> getDetalhePedidos() {
+		return detalhePedidos;
 	}
 
-	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
-		this.detalhePedido = detalhePedido;
+	public void setDetalhePedidos(List<DetalhePedido> detalhePedidos) {
+		this.detalhePedidos = detalhePedidos;
 	}
-	
+
 }

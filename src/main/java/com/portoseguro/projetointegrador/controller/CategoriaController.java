@@ -65,6 +65,7 @@ public class CategoriaController {
 	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.cadastrarCategoria(categoria));
+
 	}
 
 	@PutMapping("/update")
