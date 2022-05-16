@@ -51,7 +51,7 @@ public class DetalhePedidoController {
 
 	@PostMapping("/add")
 	public ResponseEntity<DetalhePedido> postDetalhePedido(@RequestBody DetalhePedido detalhePedido) {
-		if (produtosRepository.existsById(detalhePedido.getProdutos().getIdProduto())) {
+		if (produtosRepository.existsById(detalhePedido.getProduto().getIdProduto())) {
 			if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido())) {
 				return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoService.cadastarDetalhes(detalhePedido));
 			}
@@ -71,7 +71,7 @@ public class DetalhePedidoController {
 	@PutMapping("/update")
 	public ResponseEntity<DetalhePedido> putDetalhePedido(@RequestBody DetalhePedido detalhePedido) {
 		if (detalhePedidoRepository.existsById(detalhePedido.getIdDetalhePedido())) {
-			if (produtosRepository.existsById(detalhePedido.getProdutos().getIdProduto()))
+			if (produtosRepository.existsById(detalhePedido.getProduto().getIdProduto()))
 				if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido()))
 					return ResponseEntity.status(HttpStatus.OK).body(detalhePedidoRepository.save(detalhePedido));
 			return ResponseEntity.notFound().build();

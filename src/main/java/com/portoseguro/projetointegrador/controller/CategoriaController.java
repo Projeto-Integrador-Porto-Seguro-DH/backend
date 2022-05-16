@@ -47,7 +47,14 @@ public class CategoriaController {
 
 	@PostMapping("/add")
 	public ResponseEntity<Categoria> postCategoria(@RequestBody @Valid Categoria categoria) {
-		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
+
+		List<Categoria> categoriaResult = categoriaRepository.findAllByNomeCategoriaContainingIgnoreCase(categoria.getNomeCategoria());
+
+		if (categoriaResult.isEmpty()){
+			return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	/*

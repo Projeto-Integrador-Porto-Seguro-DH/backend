@@ -40,7 +40,7 @@ public class Categoria {
 
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.PERSIST)
 	@JsonIgnoreProperties(value = { "categoria", "detalhePedido" })
-	private List<Produtos> produtos;
+	private List<Produto> produtos;
 
 	// GETTERS E SETTERS
 
@@ -68,11 +68,11 @@ public class Categoria {
 		this.descricaoCategoria = descricaoCategoria;
 	}
 
-	public List<Produtos> getProdutos() {
+	public List<Produto> getProdutos() {
 		return produtos;
 	}
 
-	public void setProdutos(List<Produtos> produtos) {
+	public void setProdutos(List<Produto> produtos) {
 		this.produtos = produtos;
 	}
 }

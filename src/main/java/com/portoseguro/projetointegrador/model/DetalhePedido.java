@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,9 +28,9 @@ public class DetalhePedido {
 	private Long idDetalhePedido;
 
 	@NotNull(message = "O campo quantidade deve ser preenchido")
-	@Positive(message = "O preço deve ser maior que 0")
+	@Positive(message = "A quantidade deve ser maior que 0")
 	@Column(name = "quantidadeProduto_detalhePedido")
-	private BigDecimal quantidadeProduto;
+	private int quantidadeProduto;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "subTotal_detalhePedido")
@@ -37,13 +38,13 @@ public class DetalhePedido {
 
 	// RELACIONAMENTOS
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("detalhePedido")
-	private Produtos produtos;
+	private Produto produto;
 	
 	// GETTERS E SETTERS
 
@@ -55,11 +56,11 @@ public class DetalhePedido {
 		this.idDetalhePedido = idDetalhePedido;
 	}
 
-	public BigDecimal getQuantidadeProduto() {
+	public int getQuantidadeProduto() {
 		return quantidadeProduto;
 	}
 
-	public void setQuantidadeProduto(BigDecimal quantidadeProduto) {
+	public void setQuantidadeProduto(int quantidadeProduto) {
 		this.quantidadeProduto = quantidadeProduto;
 	}
 
@@ -79,12 +80,11 @@ public class DetalhePedido {
 		this.pedido = pedido;
 	}
 
-	public Produtos getProdutos() {
-		return produtos;
+	public Produto getProduto() {
+		return produto;
 	}
 
-	public void setProdutos(Produtos produtos) {
-		this.produtos = produtos;
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
-
 }
