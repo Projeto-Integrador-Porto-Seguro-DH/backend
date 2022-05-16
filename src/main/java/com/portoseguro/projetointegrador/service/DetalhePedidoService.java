@@ -107,7 +107,8 @@ public class DetalhePedidoService {
 	}
 
 	public void verificarDisponibilidadeDeProduto(DetalhePedido detalhePedido) {
-		Optional<Produto> produto = produtosRepository.findById(detalhePedido.getProduto().getIdProduto());
+		Long idProdutoBD = detalhePedido.getProduto().getIdProduto();
+		Optional<Produto> produto = produtosRepository.findById(idProdutoBD);
 
 		if (!produto.get().isProdutoDisponivel()) {
 			throw new IllegalStateException("Produto não disponível no estoque!");
@@ -115,7 +116,7 @@ public class DetalhePedidoService {
 
 		int diferencaEstoqueComPedido = produto.get().getEstoqueProduto() - detalhePedido.getQuantidadeProduto();
 
-		if (diferencaEstoqueComPedido <= 0) {
+		if (diferencaEstoqueComPedido < 0) {
 			throw new IllegalStateException("Não há quantidade disponível em estoque!" + "\nQuantidade disponível: "
 					+ produto.get().getEstoqueProduto());
 		}

@@ -34,17 +34,17 @@ public class Usuario {
 	private long idUsuario;
 
 	@NotNull(message = "O campo Nome não pode ficar em branco")
-	@Size(min = 5, max = 255, message = "O campo nome deve conter entre 5 e 255 caracteres")
+	@Size(max = 255, message = "O campo nome deve conter no máximo 255 caracteres")
 	@Column(name = "nome_usuario")
 	private String nomeUsuario;
 
 	@NotNull(message = "O campo Sobrenome não pode ficar em branco")
-	@Size(max = 255, message = "O campo Sobrenome deve conter no maximo 255 caracteres")
+	@Size(max = 255, message = "O campo Sobrenome deve conter no máximo 255 caracteres")
 	@Column(name = "sobrenome_usuario")
 	private String sobrenomeUsuario;
 
 	@Transient
-	private String nomeCompleto = nomeUsuario + " " + sobrenomeUsuario;
+	private String nomeCompleto;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "dataDeNascimento_usuario")
@@ -58,7 +58,6 @@ public class Usuario {
 	@Column(name = "logradouroEndereco_usuario")
 	private String logradouroEndereco;
 
-	@Size(min = 8, max = 8, message = "O Cep deve possuir 8 caracteres")
 	@Column(name = "cepEndereco_usuario")
 	private int cepEndereco;
 
@@ -80,7 +79,6 @@ public class Usuario {
 	@Column(name = "estadoEndereco_usuario")
 	private EstadosEnum estadoEndereco;
 
-	@Size(min = 9, max = 11, message = "O Telefone deve conter conter entre 9 e 11 caracteres")
 	@Column(name = "telefone_usuario")
 	private long telefoneUsuario;
 
@@ -134,11 +132,7 @@ public class Usuario {
 	}
 
 	public String getNomeCompleto() {
-		return nomeCompleto;
-	}
-
-	public void setNomeCompleto(String nomeCompleto) {
-		this.nomeCompleto = nomeCompleto;
+		return getNomeUsuario() + " " + getSobrenomeUsuario();
 	}
 
 	public LocalDate getDataDeNascimento() {

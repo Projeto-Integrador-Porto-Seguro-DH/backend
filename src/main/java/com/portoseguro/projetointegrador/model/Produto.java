@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -41,13 +40,11 @@ public class Produto {
 	private String descricaoProduto;
 
 	@NotNull(message = "O campo preço deve ser preenchido")
-	@Positive(message = "O campo preço deve receber um valor maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "preco_produto")
 	private BigDecimal precoUnitarioProduto;
 
 	@NotNull(message = "O campo estoque deve ser preenchido")
-	@Positive(message = "O campo estoque deve receber um valor maior que 0")
 	@Column(name = "estoque_produto")
 	private int estoqueProduto;
 

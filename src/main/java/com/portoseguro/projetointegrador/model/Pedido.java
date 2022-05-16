@@ -64,7 +64,7 @@ public class Pedido {
 
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("pedido")
-	private List<DetalhePedido> detalhePedidos;
+	private List<DetalhePedido> detalhePedido;
 
 	// GETTERS E SETTERS
 
@@ -128,12 +128,12 @@ public class Pedido {
 		this.usuario = usuario;
 	}
 
-	public List<DetalhePedido> getDetalhePedidos() {
-		return detalhePedidos;
+	public List<DetalhePedido> getDetalhePedido() {
+		return detalhePedido;
 	}
 
-	public void setDetalhePedidos(List<DetalhePedido> detalhePedidos) {
-		this.detalhePedidos = detalhePedidos;
+	public void setDetalhePedido(List<DetalhePedido> detalhePedido) {
+		this.detalhePedido = detalhePedido;
 	}
 
 }
