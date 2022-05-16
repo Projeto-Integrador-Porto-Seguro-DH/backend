@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -49,7 +47,6 @@ public class Usuario {
 	private String nomeCompleto = nomeUsuario + " " + sobrenomeUsuario;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
 	@Column(name = "dataDeNascimento_usuario")
 	private LocalDate dataDeNascimento;
 
