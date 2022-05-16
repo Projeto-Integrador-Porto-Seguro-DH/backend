@@ -48,16 +48,6 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioRepository.findAllByNomeUsuarioContainingIgnoreCase(nomeUsuario));
 	}
 
-	@GetMapping("/cpf/{cpfUsuario}")
-	public ResponseEntity<List<Usuario>> getByCpfUsuario(@PathVariable String cpfUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByCpfUsuarioContainingIgnoreCase(cpfUsuario));
-	}
-
-	@GetMapping("/endereco/{enderecoUsuario}")
-	public ResponseEntity<List<Usuario>> getByEnderecoUsuario(@PathVariable String enderecoUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByEnderecoUsuarioContainingIgnoreCase(enderecoUsuario));
-	}
-
 	@GetMapping("/email/{emailUsuario}")
 	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));

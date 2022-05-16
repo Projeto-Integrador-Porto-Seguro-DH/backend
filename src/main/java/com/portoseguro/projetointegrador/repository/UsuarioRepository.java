@@ -20,5 +20,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	public List<Usuario> findAllByEmailUsuarioContainingIgnoreCase(String emailUsuario);
 
 	public Optional<Usuario> findByNomeUsuario(String nomeUsuario);
-	
+
 }
