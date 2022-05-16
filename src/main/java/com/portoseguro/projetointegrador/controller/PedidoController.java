@@ -1,14 +1,10 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.portoseguro.projetointegrador.model.Usuario;
-import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +24,6 @@ import com.portoseguro.projetointegrador.service.PedidoService;
 @RequestMapping("/pedidos")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PedidoController {
-
-	@Autowired
-	private ProdutosRepository produtosRepository;
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
@@ -53,27 +46,10 @@ public class PedidoController {
 	}
 
 	@PostMapping("/add")
-	@Transactional
 	public ResponseEntity<Pedido> postPedido(@RequestBody Pedido pedido) {
-
-		Optional<Usuario> usuario = usuarioRepository.findById(pedido.getUsuario().getIdUsuario());
-
-		if (usuario.isPresent()){
-
-			Pedido pedidoEntity = this.pedidoService.cadastrarPedido(pedido);
-
-			return ResponseEntity.status(HttpStatus.OK).body(pedidoEntity);
-		}
-
-		return ResponseEntity.notFound().build();
-	}
-
-	/*
-	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
-	 */
-	@PostMapping("/list")
-	public ResponseEntity<List<Pedido>> postListaPedido(@RequestBody List<Pedido> pedido) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.saveAll(pedido));
+		return usuarioRepository.findById(pedido.getUsuario().getIdUsuario())
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.cadastrarPedido(pedido)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/update")
@@ -88,14 +64,10 @@ public class PedidoController {
 
 	@DeleteMapping("delete/{idPedido}")
 	public ResponseEntity<Object> deletePedido(@PathVariable Long idPedido) {
-
-		Boolean deletedPedido = this.pedidoService.deletePedido(idPedido);
-		if (deletedPedido = true) {
+		return pedidoRepository.findById(idPedido).map(resposta -> {
+			pedidoRepository.deleteById(idPedido);
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}
-		else {
-			return ResponseEntity.notFound().build();
-		}
+		}).orElse(ResponseEntity.notFound().build());
 	}
 
 }

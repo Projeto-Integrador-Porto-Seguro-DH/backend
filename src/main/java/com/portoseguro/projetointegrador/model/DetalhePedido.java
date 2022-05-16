@@ -1,17 +1,24 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_detalhePedido")
-public class DetalhePedido implements Serializable {
+public class DetalhePedido {
 
 	// ATRIBUTOS
 
@@ -21,7 +28,7 @@ public class DetalhePedido implements Serializable {
 	private Long idDetalhePedido;
 
 	@NotNull(message = "O campo quantidade deve ser preenchido")
-	@Positive(message = "O preço deve ser maior que 0")
+	@Positive(message = "A quantidade deve ser maior que 0")
 	@Column(name = "quantidadeProduto_detalhePedido")
 	private int quantidadeProduto;
 
@@ -32,9 +39,11 @@ public class DetalhePedido implements Serializable {
 	// RELACIONAMENTOS
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnoreProperties("detalhePedido")
 	private Produto produto;
 	
 	// GETTERS E SETTERS

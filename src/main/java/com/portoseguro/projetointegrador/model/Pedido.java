@@ -1,20 +1,29 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 
 @Entity
 @Table(name = "tb_pedido")
-public class Pedido implements Serializable {
+public class Pedido {
 
 	// ATRIBUTOS
 
@@ -23,14 +32,13 @@ public class Pedido implements Serializable {
 	@Column(name = "codigo_pedido")
 	private Long idPedido;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
 	@Column(name = "dataPedido_pedido")
-	private Date dataPedido = new Date(System.currentTimeMillis());
+	private LocalDateTime dataPedido = LocalDateTime.now();
 
 	@NotNull(message = "O campo status do pedido deve ser preenchido")
 	@Column(name = "status_pedido")
-	private String statusPedido;
+	private StatusPedidoEnum statusPedido;
 
 	@Column(name = "codigo_envio")
 	private String codigoEnvio;
@@ -68,19 +76,15 @@ public class Pedido implements Serializable {
 		this.idPedido = idPedido;
 	}
 
-	public Date getDataPedido() {
+	public LocalDateTime getDataPedido() {
 		return dataPedido;
 	}
 
-	public void setDataPedido(Date dataPedido) {
-		this.dataPedido = dataPedido;
-	}
-
-	public String getStatusPedido() {
+	public StatusPedidoEnum getStatusPedido() {
 		return statusPedido;
 	}
 
-	public void setStatusPedido(String statusPedido) {
+	public void setStatusPedido(StatusPedidoEnum statusPedido) {
 		this.statusPedido = statusPedido;
 	}
 
@@ -131,4 +135,5 @@ public class Pedido implements Serializable {
 	public void setDetalhePedidos(List<DetalhePedido> detalhePedidos) {
 		this.detalhePedidos = detalhePedidos;
 	}
+
 }

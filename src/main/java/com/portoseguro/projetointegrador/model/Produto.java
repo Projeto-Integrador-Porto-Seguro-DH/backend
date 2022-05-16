@@ -1,6 +1,5 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_produto")
-public class Produto  implements Serializable {
+public class Produto {
 
 	// ATRIBUTOS
 
@@ -46,11 +45,14 @@ public class Produto  implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "preco_produto")
 	private BigDecimal precoUnitarioProduto;
-	
+
 	@NotNull(message = "O campo estoque deve ser preenchido")
 	@Positive(message = "O campo estoque deve receber um valor maior que 0")
 	@Column(name = "estoque_produto")
 	private int estoqueProduto;
+
+	@Column(name = "disponivel_produto", columnDefinition = "boolean default '1'")
+	private boolean produtoDisponivel;
 
 	// RELACIONAMENTOS
 
@@ -61,7 +63,7 @@ public class Produto  implements Serializable {
 	@ManyToOne
 	@JsonIgnoreProperties(value = { "produtos" })
 	private Categoria categoria;
-	
+
 	// GETTERS E SETTERS
 
 	public Long getIdProduto() {
@@ -104,6 +106,14 @@ public class Produto  implements Serializable {
 		this.estoqueProduto = estoqueProduto;
 	}
 
+	public boolean isProdutoDisponivel() {
+		return produtoDisponivel;
+	}
+
+	public void setProdutoDisponivel(boolean produtoDisponivel) {
+		this.produtoDisponivel = produtoDisponivel;
+	}
+
 	public List<DetalhePedido> getDetalhePedido() {
 		return detalhePedido;
 	}
@@ -120,5 +130,4 @@ public class Produto  implements Serializable {
 		this.categoria = categoria;
 	}
 
-	
 }

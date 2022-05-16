@@ -1,6 +1,5 @@
 package com.portoseguro.projetointegrador.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -18,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_categoria")
-public class Categoria implements Serializable {
+public class Categoria {
 
 	// ATRIBUTOS
 
