@@ -1,6 +1,9 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.model.Pedido;
-import com.portoseguro.projetointegrador.repository.PedidoRepository;
-import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 import com.portoseguro.projetointegrador.service.PedidoService;
 
 @RestController
@@ -26,22 +27,24 @@ import com.portoseguro.projetointegrador.service.PedidoService;
 public class PedidoController {
 
 	@Autowired
-	private PedidoRepository pedidoRepository;
-
-	@Autowired
-	private UsuarioRepository usuarioRepository;
-	
-	@Autowired
 	private PedidoService pedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<Pedido>> getAllPedido() {
-		return ResponseEntity.ok(pedidoRepository.findAll());
+		Optional<List<Pedido>> todosPedidos = pedidoService.encontraTodosPedidos();
+		
+		if (todosPedidos.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			
+		}
+		
+		return ResponseEntity.ok(todosPedidos.get());
 	}
 
 	@GetMapping("/{idPedido}")
 	public ResponseEntity<Pedido> getAllById(@PathVariable Long idPedido) {
-		return pedidoRepository.findById(idPedido).map(resposta -> ResponseEntity.ok(resposta))
+	return pedidoRepository.findById(idPedido)
+				.map(resposta -> ResponseEntity.ok().body(pedidoRepository.getById(idPedido)))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
@@ -53,13 +56,10 @@ public class PedidoController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Pedido> putPedido(@RequestBody Pedido pedido) {
-		if (pedidoRepository.existsById(pedido.getIdPedido())) {
-			if (usuarioRepository.existsById(pedido.getUsuario().getIdUsuario()))
-				return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(pedido));
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.notFound().build();
+	public ResponseEntity<Pedido> putPedido(@RequestBody @Valid Pedido pedido) {
+		return pedidoRepository.findById(pedido.getIdPedido())
+				.map(resposta -> ResponseEntity.ok().body(pedidoRepository.save(pedido)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("delete/{idPedido}")
