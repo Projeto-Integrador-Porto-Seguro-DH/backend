@@ -31,7 +31,7 @@ public class PedidoController {
 
 	@GetMapping
 	public ResponseEntity<List<Pedido>> encontrarPedidos() {
-		Optional<List<Pedido>> todosPedidos = pedidoService.encontrarTodos();
+		Optional<List<Pedido>> todosPedidos = pedidoService.encontrarPedidos();
 
 		if (todosPedidos.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -42,10 +42,15 @@ public class PedidoController {
 	}
 
 	@GetMapping("/{idPedido}")
-	public ResponseEntity<Pedido> getAllIdPedido(@PathVariable Long idPedido) {
-		return pedidoRepository.findByID(idPedido)
-				.map(resposta -> ResponseEntity.ok().body(pedidoRepository.getByIdPedido(idPedido)))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Pedido> encontrarIdPedido(@PathVariable Long idPedido) {
+		Optional<Pedido> pedidoPorId = pedidoService.encontrarPorIdPedido(idPedido);
+
+		if (pedidoPorId.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(pedidoPorId.get());
+
 	}
 
 	@PostMapping("/add")

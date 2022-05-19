@@ -31,16 +31,7 @@ public class PedidoService {
 		Optional<Pedido> pedidoPorId = pedidoRepository.findById(idPedido);
 
 		return pedidoPorId;
-	}
 
-	public Optional<List<Pedido>> findAllByIdPedidoContainingIgnoreCase(String idPedido) {
-		Optional<Pedido> buscarPorId = pedidoRepository.findByIdPedidoIgnoreCase(idPedido);
-
-		if (buscarPorId.isEmpty()) {
-			return Optional.empty();
-		}
-
-		return Optional.of(buscarPorId);
 	}
 
 	public boolean verificarPedidoExistente(Pedido pedido) {
