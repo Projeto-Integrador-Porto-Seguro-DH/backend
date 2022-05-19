@@ -53,22 +53,9 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
 	}
 
-	/*
-	 * APÓS IMPLEMENTAÇÃO DA SECURITY SERÁ CRIADO O MÉTODO LOGAR, ONDE SERÃO
-	 * AUTENTICADOS O LOGIN E SENHA DO USUÁRO
-	 *
-	 * public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin>
-	 * usuarioLogin) { return }
-	 */
-
 	@PostMapping("/add")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
-	}
-
-	@PostMapping("/list/")
-	public ResponseEntity<List<Usuario>> postListaUsuario(@RequestBody List<Usuario> nomeUsuario) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.saveAll(nomeUsuario));
 	}
 
 	@PostMapping("/login")

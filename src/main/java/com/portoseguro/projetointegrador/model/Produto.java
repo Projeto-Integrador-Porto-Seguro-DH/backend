@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_produto")
-public class Produtos {
+public class Produto {
 
 	// ATRIBUTOS
 
@@ -41,25 +40,27 @@ public class Produtos {
 	private String descricaoProduto;
 
 	@NotNull(message = "O campo preço deve ser preenchido")
-	@Positive(message = "O campo preço deve receber um valor maior que 0")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	@Column(name = "preco_produto")
 	private BigDecimal precoUnitarioProduto;
-	
+
 	@NotNull(message = "O campo estoque deve ser preenchido")
-	@Positive(message = "O campo estoque deve receber um valor maior que 0")
 	@Column(name = "estoque_produto")
 	private int estoqueProduto;
 
+	@Column(name = "disponivel_produto", columnDefinition = "boolean default '1'")
+	private boolean produtoDisponivel;
+
 	// RELACIONAMENTOS
 
-	@OneToMany(mappedBy = "produtos", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value = { "pedido", "produto" })
 	private List<DetalhePedido> detalhePedido;
 
 	@ManyToOne
 	@JsonIgnoreProperties(value = { "produtos" })
 	private Categoria categoria;
-	
+
 	// GETTERS E SETTERS
 
 	public Long getIdProduto() {
@@ -102,6 +103,14 @@ public class Produtos {
 		this.estoqueProduto = estoqueProduto;
 	}
 
+	public boolean isProdutoDisponivel() {
+		return produtoDisponivel;
+	}
+
+	public void setProdutoDisponivel(boolean produtoDisponivel) {
+		this.produtoDisponivel = produtoDisponivel;
+	}
+
 	public List<DetalhePedido> getDetalhePedido() {
 		return detalhePedido;
 	}
@@ -118,5 +127,4 @@ public class Produtos {
 		this.categoria = categoria;
 	}
 
-	
 }

@@ -55,19 +55,6 @@ public class PedidoController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	/*
-	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
-	 */
-	@PostMapping("/list")
-<<<<<<< Updated upstream
-	public ResponseEntity<List<Pedido>> postListaPedido(@RequestBody List<Pedido> pedido) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.saveAll(pedido));
-=======
-	public ResponseEntity<List<Pedido>> postListaPedido(@RequestBody @Valid List<Pedido> pedido) {
-		return new ResponseEntity<List<Pedido>>(pedidoRepository.saveAll(pedido), HttpStatus.CREATED);
->>>>>>> Stashed changes
-	}
-
 	@PutMapping("/update")
 	public ResponseEntity<Pedido> putPedido(@RequestBody @Valid Pedido pedido) {
 		return pedidoRepository.findById(pedido.getIdPedido())

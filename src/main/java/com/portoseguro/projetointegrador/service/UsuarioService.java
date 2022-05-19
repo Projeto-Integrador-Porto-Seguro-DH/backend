@@ -21,7 +21,7 @@ public class UsuarioService {
 	private static final String REGEX_SENHA = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$";
 
 	public Usuario cadastrarUsuario(Usuario usuario) {
-		Optional<Usuario> user = usuarioRepository.findByNomeUsuario(usuario.getNomeUsuario());
+		Optional<Usuario> user = usuarioRepository.findByNomeUsuarioIgnoreCase(usuario.getNomeUsuario());
 		if (user.isPresent()) {
 			throw new IllegalStateException("Usuário já existente");
 		}
@@ -38,7 +38,7 @@ public class UsuarioService {
 
 	public Optional<UsuarioLogin> logar(Optional<UsuarioLogin> user) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuario(user.get().getNomeUsuario());
+		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuarioIgnoreCase(user.get().getNomeUsuario());
 
 		if (usuario.isPresent()) {
 			if (encoder.matches(user.get().getSenhaUsuario(), usuario.get().getSenhaUsuario())) {

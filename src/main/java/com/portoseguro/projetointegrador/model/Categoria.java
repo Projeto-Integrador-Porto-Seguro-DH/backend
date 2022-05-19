@@ -35,13 +35,28 @@ public class Categoria {
 	@Size(min = 10, max = 255, message = "O campo descrição deve conter entre 10 e 255 caracteres")
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
-
+	
+	
+	// CONSTRUTORES
+	
+	public Categoria() {}
+	
+	public Categoria(Long idCategoria,
+			String nomeCategoria,
+			String descricaoCategoria) {
+		this.idCategoria = idCategoria;
+		this.nomeCategoria = nomeCategoria;
+		this.descricaoCategoria = descricaoCategoria;
+	}
+	
+	
 	// RELACIONAMENTOS
 
 	@OneToMany(mappedBy = "categoria", cascade = CascadeType.PERSIST)
 	@JsonIgnoreProperties(value = { "categoria", "detalhePedido" })
-	private List<Produtos> produtos;
+	private List<Produto> produtos;
 
+	
 	// GETTERS E SETTERS
 
 	public Long getIdCategoria() {
@@ -68,11 +83,11 @@ public class Categoria {
 		this.descricaoCategoria = descricaoCategoria;
 	}
 
-	public List<Produtos> getProdutos() {
+	public List<Produto> getProdutos() {
 		return produtos;
 	}
 
-	public void setProdutos(List<Produtos> produtos) {
+	public void setProdutos(List<Produto> produtos) {
 		this.produtos = produtos;
 	}
 }

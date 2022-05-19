@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portoseguro.projetointegrador.model.Produtos;
+import com.portoseguro.projetointegrador.model.Produto;
 import com.portoseguro.projetointegrador.repository.CategoriaRepository;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 
@@ -31,23 +31,23 @@ public class ProdutoController {
 	private CategoriaRepository categoriaRepository;
 
 	@GetMapping
-	public ResponseEntity<List<Produtos>> getAllProduto() {
+	public ResponseEntity<List<Produto>> getAllProduto() {
 		return ResponseEntity.ok(produtosRepository.findAll());
 	}
 
 	@GetMapping("/{idProduto}")
-	public ResponseEntity<Produtos> getAllById(@PathVariable Long idProduto) {
+	public ResponseEntity<Produto> getAllById(@PathVariable Long idProduto) {
 		return produtosRepository.findById(idProduto).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/nome/{nomeProduto}")
-	public ResponseEntity<List<Produtos>> getByNomeProdutos(@PathVariable String nomeProduto) {
+	public ResponseEntity<List<Produto>> getByNomeProdutos(@PathVariable String nomeProduto) {
 		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto));
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Produtos> postProdutos(@RequestBody Produtos produtos) {
+	public ResponseEntity<Produto> postProdutos(@RequestBody Produto produtos) {
 		return categoriaRepository.findById(produtos.getCategoria().getIdCategoria())
 				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.save(produtos)))
 				.orElse(ResponseEntity.notFound().build());
@@ -57,12 +57,12 @@ public class ProdutoController {
 	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
 	 */
 	@PostMapping("/list")
-	public ResponseEntity<List<Produtos>> postListaProdutos(@RequestBody List<Produtos> produtos) {
+	public ResponseEntity<List<Produto>> postListaProdutos(@RequestBody List<Produto> produtos) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.saveAll(produtos));
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Produtos> putProdutos(@RequestBody Produtos produtos) {
+	public ResponseEntity<Produto> putProdutos(@RequestBody Produto produtos) {
 		if (produtosRepository.existsById(produtos.getIdProduto())) {
 			if (produtosRepository.existsById(produtos.getCategoria().getIdCategoria()))
 				return ResponseEntity.status(HttpStatus.OK).body(produtosRepository.save(produtos));
