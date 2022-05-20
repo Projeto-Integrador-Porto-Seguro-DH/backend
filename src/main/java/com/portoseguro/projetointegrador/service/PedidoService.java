@@ -35,7 +35,8 @@ public class PedidoService {
 	}
 
 	public boolean verificarPedidoExistente(Pedido pedido) {
-		Optional<Pedido> pedidoExistente = pedidoRepository.findById(pedido.getIdPedido());
+		Optional<Pedido> pedidoExistente = pedidoRepository
+				.findById(pedido.getIdPedido());
 
 		if (pedidoExistente.isPresent()) {
 			return true;
@@ -48,7 +49,7 @@ public class PedidoService {
 	public Pedido cadastrarPedido(Pedido pedido) {
 
 		if (verificarPedidoExistente(pedido)) {
-			throw new IllegalStateException("Pedido" + pedido.getIdPedido() + "já existe!");
+			throw new IllegalStateException ("Pedido já existe!");
 
 		}
 
