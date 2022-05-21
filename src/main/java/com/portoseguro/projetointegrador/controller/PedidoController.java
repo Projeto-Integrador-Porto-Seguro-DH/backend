@@ -45,7 +45,7 @@ public class PedidoController {
 	public ResponseEntity<Pedido> encontrarIdPedido(@PathVariable Long idPedido) {
 		Optional<Pedido> pedidoPorId = pedidoService.encontrarPorIdPedido(idPedido);
 
-		if (pedidoPorId.get() == null) {
+		if (pedidoPorId.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
