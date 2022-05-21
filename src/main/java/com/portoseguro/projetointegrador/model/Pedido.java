@@ -36,7 +36,6 @@ public class Pedido {
 	@Column(name = "dataPedido_pedido")
 	private LocalDateTime dataPedido = LocalDateTime.now();
 
-	@NotNull(message = "O campo status do pedido deve ser preenchido")
 	@Column(name = "status_pedido")
 	private StatusPedidoEnum statusPedido;
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 
@@ -35,8 +36,7 @@ public class PedidoService {
 	}
 
 	public boolean verificarPedidoExistente(Pedido pedido) {
-		Optional<Pedido> pedidoExistente = pedidoRepository
-				.findById(pedido.getIdPedido());
+		Optional<Pedido> pedidoExistente = pedidoRepository.findById(pedido.getIdPedido());
 
 		if (pedidoExistente.isPresent()) {
 			return true;
@@ -47,11 +47,7 @@ public class PedidoService {
 
 	@Transactional
 	public Pedido cadastrarPedido(Pedido pedido) {
-
-		if (verificarPedidoExistente(pedido)) {
-			throw new IllegalStateException ("Pedido já existe!");
-
-		}
+		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
 
 		return pedidoRepository.save(pedido);
 
