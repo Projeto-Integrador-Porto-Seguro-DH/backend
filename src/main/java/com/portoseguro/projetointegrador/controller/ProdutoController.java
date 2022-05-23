@@ -1,6 +1,9 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portoseguro.projetointegrador.model.Categoria;
 import com.portoseguro.projetointegrador.model.Produto;
-import com.portoseguro.projetointegrador.repository.CategoriaRepository;
-import com.portoseguro.projetointegrador.repository.ProdutosRepository;
+import com.portoseguro.projetointegrador.service.ProdutoService;
 
 @RestController
 @RequestMapping("/produtos")
@@ -25,32 +28,46 @@ import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 public class ProdutoController {
 
 	@Autowired
-	private ProdutosRepository produtosRepository;
-
-	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private ProdutoService produtoService;
 
 	@GetMapping
-	public ResponseEntity<List<Produto>> getAllProduto() {
-		return ResponseEntity.ok(produtosRepository.findAll());
+	public ResponseEntity<List<Produto>> encontrarProdutos() {
+		Optional<List<Produto>> todosProdutos = produtoService.encontrarProdutos();
+
+		if (todosProdutos.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(todosProdutos.get());
 	}
 
 	@GetMapping("/{idProduto}")
-	public ResponseEntity<Produto> getAllById(@PathVariable Long idProduto) {
-		return produtosRepository.findById(idProduto).map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Produto> encontrarProdutoPorId(@PathVariable Long idProduto) {
+		Optional<Produto> produtoPorId = produtoService.encontrarProdutoPorId(idProduto);
+
+		if (produtoPorId.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(produtoPorId.get());
+
 	}
 
 	@GetMapping("/nome/{nomeProduto}")
 	public ResponseEntity<List<Produto>> getByNomeProdutos(@PathVariable String nomeProduto) {
-		return ResponseEntity.ok(produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto));
+		Optional<List<Categoria>> buscaPorNome = produtoService.encontrarProdutosPorNome(nomeProduto);
+
+		if (buscaPorNome.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(buscaPorNome.get());
+		
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Produto> postProdutos(@RequestBody Produto produtos) {
-		return categoriaRepository.findById(produtos.getCategoria().getIdCategoria())
-				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.save(produtos)))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Produto> postProduto(@RequestBody Produto produto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.cadastrarProduto(produto));
 	}
 
 	/*
@@ -62,22 +79,16 @@ public class ProdutoController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Produto> putProdutos(@RequestBody Produto produtos) {
-		if (produtosRepository.existsById(produtos.getIdProduto())) {
-			if (produtosRepository.existsById(produtos.getCategoria().getIdCategoria()))
-				return ResponseEntity.status(HttpStatus.OK).body(produtosRepository.save(produtos));
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.notFound().build();
+	public ResponseEntity<Produto> putProdutos(@RequestBody @Valid Produto produtos) {
+		return ResponseEntity.ok(produtoService.atualizarProduto(produtos));
 
 	}
 
 	@DeleteMapping("delete/{idProduto}")
-	public ResponseEntity<Object> deleteProdutos(@PathVariable Long idProduto) {
-		return produtosRepository.findById(idProduto).map(resposta -> {
-			produtosRepository.deleteById(idProduto);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Object> deleteProduto(@PathVariable Long idProduto) {
+		produtoService.deletarProduto(idProduto);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
