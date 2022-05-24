@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portoseguro.projetointegrador.model.Categoria;
 import com.portoseguro.projetointegrador.model.Produto;
 import com.portoseguro.projetointegrador.service.ProdutoService;
 
@@ -31,8 +30,8 @@ public class ProdutoController {
 	private ProdutoService produtoService;
 
 	@GetMapping
-	public ResponseEntity<List<Produto>> encontrarProdutos() {
-		Optional<List<Produto>> todosProdutos = produtoService.encontrarProdutos();
+	public ResponseEntity<List<Produto>> encontrarProduto() {
+		Optional<List<Produto>> todosProdutos = produtoService.encontrarProduto();
 
 		if (todosProdutos.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -55,27 +54,19 @@ public class ProdutoController {
 
 	@GetMapping("/nome/{nomeProduto}")
 	public ResponseEntity<List<Produto>> getByNomeProdutos(@PathVariable String nomeProduto) {
-		Optional<List<Categoria>> buscaPorNome = produtoService.encontrarProdutosPorNome(nomeProduto);
+		Optional<List<Produto>> buscaPorNome = produtoService.encontrarProdutosPorNome(nomeProduto);
 
 		if (buscaPorNome.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
 		return ResponseEntity.ok(buscaPorNome.get());
-		
+
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<Produto> postProduto(@RequestBody Produto produto) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.cadastrarProduto(produto));
-	}
-
-	/*
-	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
-	 */
-	@PostMapping("/list")
-	public ResponseEntity<List<Produto>> postListaProdutos(@RequestBody List<Produto> produtos) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(produtosRepository.saveAll(produtos));
 	}
 
 	@PutMapping("/update")

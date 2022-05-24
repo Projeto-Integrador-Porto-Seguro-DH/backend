@@ -3,91 +3,91 @@ package com.portoseguro.projetointegrador.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.portoseguro.projetointegrador.model.Produto;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 
+@Service
+@Transactional(readOnly = true)
 public class ProdutoService {
 
-	@Service
-	@Transactional(readOnly = true)
-	public class ProdutosService {
+	@Autowired
+	ProdutosRepository produtosRepository;
 
-		@Autowired
-		ProdutosRepository produtosRepository;
+	public Optional<List<Produto>> encontrarProduto() {
+		List<Produto> todosProdutos = produtosRepository.findAll();
 
-		public Optional<List<Produto>> encontrarProduto() {
-			List<Produto> todosProdutos = produtosRepository.findAll();
-
-			if (todosProdutos.isEmpty()) {
-				return Optional.empty();
-
-			}
-
-			return Optional.of(todosProdutos);
+		if (todosProdutos.isEmpty()) {
+			return Optional.empty();
 
 		}
 
-		public Optional<Produto> encontrarProdutoPorId(long idProduto) {
-			Optional<Produto> produtoPorId = produtosRepository.findById(idProduto);
+		return Optional.of(todosProdutos);
 
-			return produtoPorId;
+	}
 
-		}
+	public Optional<Produto> encontrarProdutoPorId(long idProduto) {
+		Optional<Produto> produtoPorId = produtosRepository.findById(idProduto);
 
-		public Optional<List<Produto>> encontrarProdutosPorNome(String nomeProduto) {
-			List<Produto> buscaPorNome = produtosRepository.findById(nomeProduto);
+		return produtoPorId;
 
-			if (buscaPorNome.isEmpty()) {
-				return Optional.empty();
-				
-			}
+	}
 
-		public boolean verificarProdutoExistente(Produto produto) {
-			Optional<Produto> produtoExistente = produtosRepository.findById(produto.getIdProduto());
+	public Optional<List<Produto>> encontrarProdutosPorNome(String nomeProduto) {
 
-			if (produtoExistente.isPresent()) {
-				return true;
-			}
+		List<Produto> buscaPorNome = produtosRepository.findAllByNomeProdutoContainingIgnoreCase(nomeProduto);
 
-			return false;
+		if (buscaPorNome.isEmpty()) {
+			return Optional.empty();
 
 		}
 
-		@Transactional
-		public Produto cadastrarProduto(Produto produto) {
-			produto.setStatusProduto(StatusProdutoEnum.REALIZADO);
+		return Optional.of(buscaPorNome);
+	}
 
-			return produtosRepository.save(produto);
+	public boolean verificarProdutoExistente(Produto produto) {
+		Optional<Produto> produtoExistente = produtosRepository.findByNomeProdutoIgnoreCase(produto.getNomeProduto());
+
+		if (produtoExistente.isPresent()) {
+			return true;
 		}
 
-		@Transactional
-		public Produto atualizarProduto(Produto produto) {
+		return false;
 
-			if (!verificarProdutoExistente(produto)) {
-				throw new IllegalStateException("Produto" + produto.getNomeProduto() + "não existe!");
+	}
 
-			}
+	@Transactional
+	public Produto cadastrarProduto(Produto produto) {
+		if (verificarProdutoExistente(produto)) {
+			throw new IllegalStateException("Produto " + produto.getNomeProduto() + " já existe!");
+		}
+		return produtosRepository.save(produto);
+	}
 
-			return produtosRepository.save(produto);
+	@Transactional
+	public Produto atualizarProduto(Produto produto) {
+
+		if (!verificarProdutoExistente(produto)) {
+			throw new IllegalStateException("Produto" + produto.getNomeProduto() + "não existe!");
 
 		}
 
-		@Transactional
-		public void deletarProduto(Long idProduto) {
-			Optional<Produto> produtoPorId = produtosRepository.findById(idProduto);
+		return produtosRepository.save(produto);
 
-			if (produtoPorId.isEmpty()) {
-				throw new IllegalStateException("Produto não existe!");
-			}
+	}
 
-			produtosRepository.deleteById(idProduto);
+	@Transactional
+	public void deletarProduto(Long idProduto) {
+		Optional<Produto> produtoPorId = produtosRepository.findById(idProduto);
+
+		if (produtoPorId.isEmpty()) {
+			throw new IllegalStateException("Produto não existe!");
 		}
 
+		produtosRepository.deleteById(idProduto);
 	}
 
 }
