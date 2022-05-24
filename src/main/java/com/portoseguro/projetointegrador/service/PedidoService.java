@@ -17,6 +17,9 @@ public class PedidoService {
 
 	@Autowired
 	public PedidoRepository pedidoRepository;
+	
+	@Autowired
+	public DetalhePedidoService detalhePedidoService;
 
 	public Optional<List<Pedido>> encontrarPedidos() {
 		List<Pedido> todosPedidos = pedidoRepository.findAll();
@@ -58,6 +61,12 @@ public class PedidoService {
 
 		if (!verificarPedidoExistente(pedido)) {
 			throw new IllegalStateException("Pedido " + pedido.getIdPedido() + " não existe!");
+		}
+
+		if (pedido.getStatusPedido() == StatusPedidoEnum.CANCELADO) {
+			for (int i = 0; i < pedido.getDetalhePedido().size(); i++) {
+				detalhePedidoService.reporEstoquePedidoCancelado(pedido.getDetalhePedido().get(i));
+			}
 		}
 
 		return pedidoRepository.save(pedido);

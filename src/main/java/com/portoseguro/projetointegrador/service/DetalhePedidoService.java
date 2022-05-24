@@ -1,13 +1,13 @@
 package com.portoseguro.projetointegrador.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.model.Produto;
@@ -23,26 +23,39 @@ public class DetalhePedidoService {
 	public DetalhePedidoRepository detalhePedidoRepository;
 
 	@Autowired
-	public ProdutosRepository produtosRepository;
+	public ProdutosRepository produtoRepository;
 
 	@Autowired
 	public PedidoRepository pedidoRepository;
 
-	public void calcularSubtotal(DetalhePedido detalhePedido) {
-		Long idProdutoBD = detalhePedido.getProduto().getIdProduto();
+	public Optional<List<DetalhePedido>> encontrarTodos() {
+		List<DetalhePedido> todosDetalhes = detalhePedidoRepository.findAll();
 
-		Optional<Produto> produtoUnitario = produtosRepository.findById(idProdutoBD);
+		if (todosDetalhes.isEmpty()) {
+			return Optional.empty();
+		}
 
-		detalhePedido.setSubtotal(new BigDecimal(detalhePedido.getQuantidadeProduto())
-				.multiply(produtoUnitario.get().getPrecoUnitarioProduto()));
+		return Optional.of(todosDetalhes);
+	}
+
+	public Optional<DetalhePedido> encontrarPorId(Long idDetalhePedido) {
+		Optional<DetalhePedido> detalhePeloID = detalhePedidoRepository.findById(idDetalhePedido);
+
+		return detalhePeloID;
+	}
+
+	public BigDecimal calcularSubtotal(DetalhePedido detalheDoPedido, Long idDoProduto) {
+		Optional<Produto> produtoUnitario = produtoRepository.findById(idDoProduto);
+		BigDecimal precoDoProduto = produtoUnitario.get().getPrecoUnitarioProduto();
+		int quantidadePedida = detalheDoPedido.getQuantidadeProduto();
+
+		detalheDoPedido.setSubtotal(new BigDecimal(quantidadePedida).multiply(precoDoProduto));
+
+		return detalheDoPedido.getSubtotal();
 	}
 
 	@Transactional
-	public void calcularTotalDoPedido(DetalhePedido detalhePedido) {
-		// Armazena os dados do Pedido do qual o DetalhePedido está atrelado.
-		Long idDoPedido = detalhePedido.getPedido().getIdPedido();
-		BigDecimal valorParcialDoTotal = detalhePedido.getSubtotal();
-
+	public void calcularTotalDoPedido(Long idDoPedido, BigDecimal subtotal) {
 		/*
 		 * Busca no BD o Pedido através de seu ID -> Retorna um Optional<Pedido> se
 		 * encontrar algo. Quando não encontra, retorna um Optional<> vazio!
@@ -72,76 +85,140 @@ public class DetalhePedidoService {
 			pedido.setValorTotalPedido(new BigDecimal(0));
 		}
 
-		pedido.setValorTotalPedido(pedido.getValorTotalPedido().add(valorParcialDoTotal.add(pedido.getValorEnvio())));
+		pedido.setValorTotalPedido(pedido.getValorTotalPedido().add(subtotal.add(pedido.getValorEnvio())));
 
 		// Salva o Pedido novamente no BD
 		pedidoRepository.save(pedido);
 	}
 
-	@Transactional
-	public DetalhePedido cadastarDetalhes(DetalhePedido detalhePedido) {
-		removerItemDoEstoque(detalhePedido);
+	public void verificarDisponibilidadeDeProduto(Long idDoProduto, int quantidadePedida) {
+		Optional<Produto> produto = produtoRepository.findById(idDoProduto);
 
-		calcularSubtotal(detalhePedido);
+		boolean produtoDisponivel = produto.get().isProdutoDisponivel();
+		int estoque = produto.get().getEstoqueProduto();
+		int diferenca = estoque - quantidadePedida;
 
-		calcularTotalDoPedido(detalhePedido);
+		if (!produtoDisponivel) {
+			throw new IllegalStateException("Produto não disponível no estoque!");
+		}
 
-		return detalhePedidoRepository.save(detalhePedido);
+		if (diferenca < 0) {
+			throw new IllegalStateException(
+					"Não há quantidade disponível em estoque!" + "\nQuantidade disponível: " + estoque);
+		}
 	}
 
 	@Transactional
-	public void removerItemDoEstoque(DetalhePedido detalhePedido) {
-		verificarDisponibilidadeDeProduto(detalhePedido);
-
-		Optional<Produto> produtoNoBD = produtosRepository.findById(detalhePedido.getProduto().getIdProduto());
-
+	public void atualizarEstoque(Long idDoProduto, int quantidadePedida) {
+		Optional<Produto> produtoNoBD = produtoRepository.findById(idDoProduto);
 		Produto produto = produtoNoBD.get();
 
-		produto.setEstoqueProduto(produto.getEstoqueProduto() - detalhePedido.getQuantidadeProduto());
+		int estoque = produto.getEstoqueProduto();
+
+		produto.setEstoqueProduto(estoque - quantidadePedida);
 
 		if (produto.getEstoqueProduto() == 0) {
 			produto.setProdutoDisponivel(false);
 		}
 
-		produtosRepository.save(produto);
-	}
-
-	public void verificarDisponibilidadeDeProduto(DetalhePedido detalhePedido) {
-		Long idProdutoBD = detalhePedido.getProduto().getIdProduto();
-		Optional<Produto> produto = produtosRepository.findById(idProdutoBD);
-
-		if (!produto.get().isProdutoDisponivel()) {
-			throw new IllegalStateException("Produto não disponível no estoque!");
-		}
-
-		int diferencaEstoqueComPedido = produto.get().getEstoqueProduto() - detalhePedido.getQuantidadeProduto();
-
-		if (diferencaEstoqueComPedido < 0) {
-			throw new IllegalStateException("Não há quantidade disponível em estoque!" + "\nQuantidade disponível: "
-					+ produto.get().getEstoqueProduto());
-		}
+		produtoRepository.save(produto);
 	}
 
 	@Transactional
-	public void atualizarEstoqueAoCancelarPedido(DetalhePedido detalhePedido) {
-		Long idDoPedido = detalhePedido.getPedido().getIdPedido();
-		Long idDoProduto = detalhePedido.getProduto().getIdProduto();
-
-		Optional<Pedido> pedidoNoBancoDeDados = pedidoRepository.findById(idDoPedido);
-		Optional<Produto> produtoNoBancoDeDados = produtosRepository.findById(idDoProduto);
-
+	public void atualizarEstoque(Long idDoProduto, int quantidadeSalvaNoBD, int quantidadeAtualizada) {
+		Optional<Produto> produtoNoBancoDeDados = produtoRepository.findById(idDoProduto);
 		Produto produto = produtoNoBancoDeDados.get();
-		Pedido pedido = pedidoNoBancoDeDados.get();
 
-		if (pedido.getStatusPedido() != StatusPedidoEnum.CANCELADO) {
-			throw new IllegalStateException("Pedido não cancelado!");
-		}
-		
-		int estoqueAtualizado = produto.getEstoqueProduto() + detalhePedido.getQuantidadeProduto();
+		int estoque = produto.getEstoqueProduto();
+		int diferenca = quantidadeSalvaNoBD - quantidadeAtualizada;
+
+		int estoqueAtualizado = estoque + diferenca;
 
 		produto.setEstoqueProduto(estoqueAtualizado);
 
-		produtosRepository.save(produto);
+		produtoRepository.save(produto);
+	}
+
+	@Transactional
+	public void reporEstoquePedidoCancelado(DetalhePedido detalheDoPedido) {
+		Long idDoProduto = detalheDoPedido.getProduto().getIdProduto();
+		Optional<Produto> produtoNoBancoDeDados = produtoRepository.findById(idDoProduto);
+		Produto produto = produtoNoBancoDeDados.get();
+
+		int estoque = produto.getEstoqueProduto();
+
+		int quantidadeCancelada = detalheDoPedido.getQuantidadeProduto();
+
+		int estoqueAtualizado = estoque + quantidadeCancelada;
+
+		produto.setEstoqueProduto(estoqueAtualizado);
+
+		produtoRepository.save(produto);
+	}
+
+	@Transactional
+	public DetalhePedido cadastarDetalhes(DetalhePedido detalheDoPedido) {
+		Long idProduto = detalheDoPedido.getProduto().getIdProduto();
+		int quantidadeProduto = detalheDoPedido.getQuantidadeProduto();
+		Long idPedido = detalheDoPedido.getPedido().getIdPedido();
+
+		verificarDisponibilidadeDeProduto(idProduto, quantidadeProduto);
+
+		atualizarEstoque(idProduto, quantidadeProduto);
+
+		BigDecimal subtotal = calcularSubtotal(detalheDoPedido, idProduto);
+
+		calcularTotalDoPedido(idPedido, subtotal);
+
+		return detalhePedidoRepository.save(detalheDoPedido);
+	}
+
+	public boolean verificarExistenciaDetalhePedido(DetalhePedido detalheDoPedido) {
+		Optional<DetalhePedido> detalheExistente = detalhePedidoRepository
+				.findById(detalheDoPedido.getIdDetalhePedido());
+
+		if (detalheExistente.isPresent()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Transactional
+	public DetalhePedido atualizarDetalhePedido(DetalhePedido detalheDoPedido) {
+		boolean detalheExiste = verificarExistenciaDetalhePedido(detalheDoPedido);
+
+		if (!detalheExiste) {
+			throw new IllegalStateException("Detalhe de pedido inexistente!");
+		}
+
+		Long idDoDetalhe = detalheDoPedido.getIdDetalhePedido();
+		Optional<DetalhePedido> detalheNoBD = detalhePedidoRepository.findById(idDoDetalhe);
+
+		int quantidadeNoBD = detalheNoBD.get().getQuantidadeProduto();
+		int quantidadeAtualizada = detalheDoPedido.getQuantidadeProduto();
+
+		if (quantidadeAtualizada != quantidadeNoBD) {
+			Long idDoProduto = detalheDoPedido.getProduto().getIdProduto();
+
+			atualizarEstoque(idDoProduto, quantidadeNoBD, quantidadeAtualizada);
+			calcularSubtotal(detalheDoPedido, idDoProduto);
+		}
+
+		return detalhePedidoRepository.save(detalheDoPedido);
+	}
+	
+	@Transactional
+	public void deletarDetalhe(Long idDetalhePedido) {
+		Optional<DetalhePedido> detalhePedido = detalhePedidoRepository.findById(idDetalhePedido);
+		
+		if(detalhePedido.isEmpty()) {
+			throw new IllegalStateException("Detalhe de pedido inexistente!");
+		}
+		
+		reporEstoquePedidoCancelado(detalhePedido.get());
+		
+		detalhePedidoRepository.deleteById(idDetalhePedido);
 	}
 
 }

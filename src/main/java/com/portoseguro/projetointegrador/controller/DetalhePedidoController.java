@@ -1,6 +1,7 @@
 package com.portoseguro.projetointegrador.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.model.DetalhePedido;
-import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
-import com.portoseguro.projetointegrador.repository.PedidoRepository;
-import com.portoseguro.projetointegrador.repository.ProdutosRepository;
 import com.portoseguro.projetointegrador.service.DetalhePedidoService;
 
 @RestController
@@ -27,64 +25,45 @@ import com.portoseguro.projetointegrador.service.DetalhePedidoService;
 public class DetalhePedidoController {
 
 	@Autowired
-	private DetalhePedidoRepository detalhePedidoRepository;
-
-	@Autowired
-	private ProdutosRepository produtosRepository;
-
-	@Autowired
-	private PedidoRepository pedidoRepository;
-
-	@Autowired
 	private DetalhePedidoService detalhePedidoService;
 
 	@GetMapping
 	public ResponseEntity<List<DetalhePedido>> getAllDetalhePedido() {
-		return ResponseEntity.ok(detalhePedidoRepository.findAll());
+		Optional<List<DetalhePedido>> todosDetalhes = detalhePedidoService.encontrarTodos();
+
+		if (todosDetalhes.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(todosDetalhes.get());
 	}
 
 	@GetMapping("/{idDetalhePedido}")
 	public ResponseEntity<DetalhePedido> getAllById(@PathVariable Long idDetalhePedido) {
-		return detalhePedidoRepository.findById(idDetalhePedido).map(resposta -> ResponseEntity.ok(resposta))
-				.orElse(ResponseEntity.notFound().build());
+		Optional<DetalhePedido> detalhePeloID = detalhePedidoService.encontrarPorId(idDetalhePedido);
+
+		if (detalhePeloID.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(detalhePeloID.get());
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<DetalhePedido> postDetalhePedido(@RequestBody DetalhePedido detalhePedido) {
-		if (produtosRepository.existsById(detalhePedido.getProduto().getIdProduto())) {
-			if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido())) {
-				return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoService.cadastarDetalhes(detalhePedido));
-			}
-		}
-
-		return ResponseEntity.notFound().build();
-	}
-
-	/*
-	 * IMPLEMENTADO APENAS PARA FACILITAR OS TESTES NO POSTMAN
-	 */
-	@PostMapping("/list")
-	public ResponseEntity<List<DetalhePedido>> postListDetalhePedido(@RequestBody List<DetalhePedido> detalhePedido) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoRepository.saveAll(detalhePedido));
+		return ResponseEntity.status(HttpStatus.CREATED).body(detalhePedidoService.cadastarDetalhes(detalhePedido));
 	}
 
 	@PutMapping("/update")
 	public ResponseEntity<DetalhePedido> putDetalhePedido(@RequestBody DetalhePedido detalhePedido) {
-		if (detalhePedidoRepository.existsById(detalhePedido.getIdDetalhePedido())) {
-			if (produtosRepository.existsById(detalhePedido.getProduto().getIdProduto()))
-				if (pedidoRepository.existsById(detalhePedido.getPedido().getIdPedido()))
-					return ResponseEntity.status(HttpStatus.OK).body(detalhePedidoRepository.save(detalhePedido));
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.ok(detalhePedidoService.atualizarDetalhePedido(detalhePedido));
 	}
 
 	@DeleteMapping("/delete/{idDetalhePedido}")
 	public ResponseEntity<Object> deleteDetalhePedido(@PathVariable Long idDetalhePedido) {
-		return detalhePedidoRepository.findById(idDetalhePedido).map(resposta -> {
-			detalhePedidoRepository.deleteById(idDetalhePedido);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}).orElse(ResponseEntity.notFound().build());
+		detalhePedidoService.deletarDetalhe(idDetalhePedido);
+		
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }

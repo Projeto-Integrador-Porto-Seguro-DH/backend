@@ -61,9 +61,15 @@ public class ProdutoService {
 
 	@Transactional
 	public Produto cadastrarProduto(Produto produto) {
+		
 		if (verificarProdutoExistente(produto)) {
 			throw new IllegalStateException("Produto " + produto.getNomeProduto() + " já existe!");
 		}
+
+		if (produto.getEstoqueProduto() > 0) {
+			produto.setProdutoDisponivel(true);
+		}
+
 		return produtosRepository.save(produto);
 	}
 

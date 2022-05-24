@@ -41,7 +41,7 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Categoria> getAllById(@PathVariable Long id) {
+	public ResponseEntity<Categoria> getById(@PathVariable Long id) {
 		Optional<Categoria> categoria = categoriaService.encontrarPorID(id);
 
 		if (categoria.isEmpty()) {
