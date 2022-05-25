@@ -15,10 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 
 @Entity
@@ -36,8 +39,12 @@ public class Pedido {
 	@Column(name = "dataPedido_pedido")
 	private LocalDateTime dataPedido = LocalDateTime.now();
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "status_pedido")
 	private StatusPedidoEnum statusPedido;
+	
+	@Transient
+	String mensagemDeStatusPedido;
 
 	@Column(name = "codigo_envio")
 	private String codigoEnvio;
@@ -79,12 +86,17 @@ public class Pedido {
 		return dataPedido;
 	}
 
+	@JsonIgnore
 	public StatusPedidoEnum getStatusPedido() {
 		return statusPedido;
 	}
 
 	public void setStatusPedido(StatusPedidoEnum statusPedido) {
 		this.statusPedido = statusPedido;
+	}
+	
+	public String getMensagemDeStatusPedido() {
+		return statusPedido.getDescricao();
 	}
 
 	public String getCodigoEnvio() {
