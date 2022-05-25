@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
+import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.repository.PedidoRepository;
 
@@ -17,7 +18,7 @@ public class PedidoService {
 
 	@Autowired
 	public PedidoRepository pedidoRepository;
-	
+
 	@Autowired
 	public DetalhePedidoService detalhePedidoService;
 
@@ -62,10 +63,16 @@ public class PedidoService {
 		if (!verificarPedidoExistente(pedido)) {
 			throw new IllegalStateException("Pedido " + pedido.getIdPedido() + " não existe!");
 		}
+		
+		Long idDoPedido = pedido.getIdPedido();
+		
+		Optional<Pedido> pedidoNoBD = pedidoRepository.findById(idDoPedido);
+		
+		List<DetalhePedido> listaDeDetalhes = pedidoNoBD.get().getDetalhePedido();
 
 		if (pedido.getStatusPedido() == StatusPedidoEnum.CANCELADO) {
-			for (int i = 0; i < pedido.getDetalhePedido().size(); i++) {
-				detalhePedidoService.reporEstoquePedidoCancelado(pedido.getDetalhePedido().get(i));
+			for (int i = 0; i < listaDeDetalhes.size(); i++) {
+				detalhePedidoService.reporEstoquePedidoCancelado(listaDeDetalhes.get(i));
 			}
 		}
 
@@ -73,15 +80,16 @@ public class PedidoService {
 
 	}
 
-	@Transactional
-	public void deletarPedido(Long idPedido) {
-		Optional<Pedido> pedidoPorId = pedidoRepository.findById(idPedido);
-
-		if (pedidoPorId.isEmpty()) {
-			throw new IllegalStateException("Pedido não existe!");
-		}
-
-		pedidoRepository.deleteById(idPedido);
-	}
+	/*
+	 * NÃO UTILIZADO NO MOMENTO
+	 * 
+	 * @Transactional public void deletarPedido(Long idPedido) { Optional<Pedido>
+	 * pedidoPorId = pedidoRepository.findById(idPedido);
+	 * 
+	 * if (pedidoPorId.isEmpty()) { throw new
+	 * IllegalStateException("Pedido não existe!"); }
+	 * 
+	 * pedidoRepository.deleteById(idPedido); }
+	 */
 
 }

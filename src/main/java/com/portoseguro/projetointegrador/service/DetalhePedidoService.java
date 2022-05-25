@@ -56,38 +56,22 @@ public class DetalhePedidoService {
 
 	@Transactional
 	public void calcularTotalDoPedido(Long idDoPedido, BigDecimal subtotal) {
-		/*
-		 * Busca no BD o Pedido através de seu ID -> Retorna um Optional<Pedido> se
-		 * encontrar algo. Quando não encontra, retorna um Optional<> vazio!
-		 */
 		Optional<Pedido> pedidoNoBancoDeDados = pedidoRepository.findById(idDoPedido);
-
-		/*
-		 * Armazena o pedido do BD em um objeto do tipo Pedido Não dá para fazer direto
-		 * usando o objeto de cima por causa do Optional<> vazio
-		 */
 		Pedido pedido = pedidoNoBancoDeDados.get();
 
-		/*
-		 * Verifica se o valor do envio é nulo: - Caso sim, usa o Setter para definir o
-		 * valor para Zero.
-		 */
-		if (pedido.getValorEnvio() == null) {
+		BigDecimal valorDoEnvio = pedido.getValorEnvio();
+		BigDecimal valorTotalDoPedido = pedido.getValorTotalPedido();
+
+		if (valorDoEnvio == null) {
 			pedido.setValorEnvio(new BigDecimal(0));
 		}
 
-		/*
-		 * Verifica se o valor do Total é nulo: - Caso sim, usa o Setter para definir o
-		 * valor para Zero; - Busca o valor Total e atualiza. Valor Total = Subtotal +
-		 * Valor do Envio
-		 */
-		if (pedido.getValorTotalPedido() == null) {
+		if (valorTotalDoPedido == null) {
 			pedido.setValorTotalPedido(new BigDecimal(0));
 		}
 
 		pedido.setValorTotalPedido(pedido.getValorTotalPedido().add(subtotal.add(pedido.getValorEnvio())));
 
-		// Salva o Pedido novamente no BD
 		pedidoRepository.save(pedido);
 	}
 
@@ -173,52 +157,68 @@ public class DetalhePedidoService {
 		return detalhePedidoRepository.save(detalheDoPedido);
 	}
 
-	public boolean verificarExistenciaDetalhePedido(DetalhePedido detalheDoPedido) {
-		Optional<DetalhePedido> detalheExistente = detalhePedidoRepository
-				.findById(detalheDoPedido.getIdDetalhePedido());
+	/* NÃO UTILIZADO NO MOMENTO
+	 * VER COMENTÁRIO ABAIXO
+	 * 
+	 * 
+	 * public boolean verificarExistenciaDetalhePedido(DetalhePedido
+	 * detalheDoPedido) { Optional<DetalhePedido> detalheExistente =
+	 * detalhePedidoRepository .findById(detalheDoPedido.getIdDetalhePedido());
+	 * 
+	 * if (detalheExistente.isPresent()) { return true; }
+	 * 
+	 * return false; }
+	 */
 
-		if (detalheExistente.isPresent()) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Transactional
-	public DetalhePedido atualizarDetalhePedido(DetalhePedido detalheDoPedido) {
-		boolean detalheExiste = verificarExistenciaDetalhePedido(detalheDoPedido);
-
-		if (!detalheExiste) {
-			throw new IllegalStateException("Detalhe de pedido inexistente!");
-		}
-
-		Long idDoDetalhe = detalheDoPedido.getIdDetalhePedido();
-		Optional<DetalhePedido> detalheNoBD = detalhePedidoRepository.findById(idDoDetalhe);
-
-		int quantidadeNoBD = detalheNoBD.get().getQuantidadeProduto();
-		int quantidadeAtualizada = detalheDoPedido.getQuantidadeProduto();
-
-		if (quantidadeAtualizada != quantidadeNoBD) {
-			Long idDoProduto = detalheDoPedido.getProduto().getIdProduto();
-
-			atualizarEstoque(idDoProduto, quantidadeNoBD, quantidadeAtualizada);
-			calcularSubtotal(detalheDoPedido, idDoProduto);
-		}
-
-		return detalhePedidoRepository.save(detalheDoPedido);
-	}
+	//
 	
-	@Transactional
-	public void deletarDetalhe(Long idDetalhePedido) {
-		Optional<DetalhePedido> detalhePedido = detalhePedidoRepository.findById(idDetalhePedido);
-		
-		if(detalhePedido.isEmpty()) {
-			throw new IllegalStateException("Detalhe de pedido inexistente!");
-		}
-		
-		reporEstoquePedidoCancelado(detalhePedido.get());
-		
-		detalhePedidoRepository.deleteById(idDetalhePedido);
-	}
+	/*
+	 * MÉTODO DE ATUALIZAR NÃO UTILIZADO Nenhum usuário deve ter autorização para
+	 * atualizar o Detalhe do pedido após realizado!
+	 * 
+	 * 
+	 * 
+	 * @Transactional public DetalhePedido atualizarDetalhePedido(DetalhePedido
+	 * detalheDoPedido) { boolean detalheExiste =
+	 * verificarExistenciaDetalhePedido(detalheDoPedido);
+	 * 
+	 * if (!detalheExiste) { throw new
+	 * IllegalStateException("Detalhe de pedido inexistente!"); }
+	 * 
+	 * Long idDoDetalhe = detalheDoPedido.getIdDetalhePedido();
+	 * Optional<DetalhePedido> detalheNoBD =
+	 * detalhePedidoRepository.findById(idDoDetalhe);
+	 * 
+	 * int quantidadeNoBD = detalheNoBD.get().getQuantidadeProduto(); int
+	 * quantidadeAtualizada = detalheDoPedido.getQuantidadeProduto();
+	 * 
+	 * if (quantidadeAtualizada != quantidadeNoBD) { Long idDoProduto =
+	 * detalheDoPedido.getProduto().getIdProduto();
+	 * 
+	 * atualizarEstoque(idDoProduto, quantidadeNoBD, quantidadeAtualizada);
+	 * calcularSubtotal(detalheDoPedido, idDoProduto); }
+	 * 
+	 * return detalhePedidoRepository.save(detalheDoPedido); }
+	 */
+
+	//
+	
+	/*
+	 * MÉTODO NÃO UTILIZADO PELOS MESMOS MOTIVOS ACIMA
+	 * 
+	 * 
+	 * 
+	 * @Transactional public void deletarDetalhe(Long idDetalhePedido) {
+	 * Optional<DetalhePedido> detalhePedidoNoBD =
+	 * detalhePedidoRepository.findById(idDetalhePedido); DetalhePedido
+	 * detalhePedido = detalhePedidoNoBD.get();
+	 * 
+	 * if (detalhePedidoNoBD.isEmpty()) { throw new
+	 * IllegalStateException("Detalhe de pedido inexistente!"); }
+	 * 
+	 * reporEstoquePedidoCancelado(detalhePedidoNoBD.get());
+	 * 
+	 * detalhePedidoRepository.deleteById(idDetalhePedido); }
+	 */
 
 }
