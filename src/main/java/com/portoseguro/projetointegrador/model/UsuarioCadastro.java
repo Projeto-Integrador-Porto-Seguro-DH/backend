@@ -2,34 +2,57 @@ package com.portoseguro.projetointegrador.model;
 
 public class UsuarioCadastro {
 
-	private String nomeCompleto;
-	private String email;
-	private String senha;
+	private String nomeUsuario;
+	private String sobrenomeUsuario;
+	private String emailUsuario;
+	private String senhaUsuario;
 	
 		
 	public UsuarioCadastro() {
 		super();
 
-	}	
-	
-	public String getNomeCompleto() {
-		return nomeCompleto;
 	}
-	public void setNomeCompleto(String nomeCompleto) {
-		this.nomeCompleto = nomeCompleto;
+
+
+	public String getNomeUsuario() {
+		return nomeUsuario;
 	}
-	public String getEmail() {
-		return email;
+
+
+	public void setNomeUsuario(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+
+
+	public String getSobrenomeUsuario() {
+		return sobrenomeUsuario;
 	}
-	public String getSenha() {
-		return senha;
+
+
+	public void setSobrenomeUsuario(String sobrenomeUsuario) {
+		this.sobrenomeUsuario = sobrenomeUsuario;
 	}
-	public void setSenha(String senha) {
-		this.senha = senha;
+
+
+	public String getEmailUsuario() {
+		return emailUsuario;
 	}
-	
+
+
+	public void setEmailUsuario(String emailUsuario) {
+		this.emailUsuario = emailUsuario;
+	}
+
+
+	public String getSenhaUsuario() {
+		return senhaUsuario;
+	}
+
+
+	public void setSenhaUsuario(String senhaUsuario) {
+		this.senhaUsuario = senhaUsuario;
+	}
+
+
 	
 }
