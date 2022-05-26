@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portoseguro.projetointegrador.dto.CadastroDTO;
+import com.portoseguro.projetointegrador.dto.LoginDTO;
 import com.portoseguro.projetointegrador.model.Usuario;
-import com.portoseguro.projetointegrador.model.UsuarioLogin;
-import com.portoseguro.projetointegrador.repository.UsuarioRepository;
 import com.portoseguro.projetointegrador.service.UsuarioService;
 
 @RestController
@@ -27,61 +27,62 @@ import com.portoseguro.projetointegrador.service.UsuarioService;
 public class UsuarioController {
 
 	@Autowired
-	private UsuarioRepository usuarioRepository;
-
-	@Autowired
 	private UsuarioService usuarioService;
 
 	@GetMapping
 	public ResponseEntity<List<Usuario>> getAllUsuario() {
-		return ResponseEntity.ok(usuarioRepository.findAll());
+		Optional<List<Usuario>> todosUsuarios = usuarioService.encontrarTodos();
+
+		if (todosUsuarios.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(todosUsuarios.get());
 	}
 
 	@GetMapping("/{idUsuario}")
-	public ResponseEntity<Usuario> getAllById(@PathVariable Long idUsuario) {
-		return usuarioRepository.findById(idUsuario).map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
-	}
+	public ResponseEntity<Usuario> getById(@PathVariable Long idUsuario) {
+		Optional<Usuario> usuario = usuarioService.encontrarPorID(idUsuario);
 
-	@GetMapping("/nome/{nomeUsuario}")
-	public ResponseEntity<List<Usuario>> getByNomeUsuario(@PathVariable String nomeUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByNomeUsuarioContainingIgnoreCase(nomeUsuario));
+		if (usuario.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(usuario.get());
 	}
 
 	@GetMapping("/email/{emailUsuario}")
-	public ResponseEntity<List<Usuario>> getByEmailUsuario(@PathVariable String emailUsuario) {
-		return ResponseEntity.ok(usuarioRepository.findAllByEmailUsuarioContainingIgnoreCase(emailUsuario));
-	}
+	public ResponseEntity<Usuario> getByEmailUsuario(@PathVariable String emailUsuario) {
+		Optional<Usuario> usuario = usuarioService.encontrarPorEmail(emailUsuario);
 
-	@PostMapping("/add")
-	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario nomeUsuario) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(nomeUsuario));
+		if (usuario.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+
+		return ResponseEntity.ok(usuario.get());
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<UsuarioLogin> login(@RequestBody Optional<UsuarioLogin> user) {
+	public ResponseEntity<LoginDTO> login(@RequestBody Optional<LoginDTO> user) {
 		return usuarioService.logar(user).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
 	@PostMapping("/cadastrar")
-	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody CadastroDTO usuario) {
 		return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
 	}
 
 	@PutMapping("/update")
 	public ResponseEntity<Usuario> putUsuario(@RequestBody Usuario usuario) {
-		return usuarioRepository.findById(usuario.getIdUsuario())
-				.map(resposta -> ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario)))
-				.orElse(ResponseEntity.notFound().build());
+		return ResponseEntity.ok(usuarioService.atualizarUsuario(usuario));
 	}
 
 	@DeleteMapping("/delete/{idUsuario}")
-	public ResponseEntity<Object> deleteUsuario(@PathVariable Long idUsuario) {
-		return usuarioRepository.findById(idUsuario).map(resposta -> {
-			usuarioRepository.deleteById(idUsuario);
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}).orElse(ResponseEntity.notFound().build());
-	}
+	public ResponseEntity<Usuario> deleteUsuario(@PathVariable String emailUsuario) {
+		usuarioService.deletarUsuario(emailUsuario);
 
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+	
 }

@@ -1,6 +1,6 @@
-package com.portoseguro.projetointegrador.model;
+package com.portoseguro.projetointegrador.dto;
 
-public class UsuarioLogin {
+public class LoginDTO {
 	
 	// ATRIBUTOS
 	
