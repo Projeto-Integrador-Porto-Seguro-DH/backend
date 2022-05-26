@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,24 +27,33 @@ import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 public class Usuario {
 
 	// ATRIBUTOS
-
+	
+		// DADOS PESSOAIS
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "codigo_usuario")
 	private long idUsuario;
 
-	@NotNull(message = "O campo Nome não pode ficar em branco")
 	@Size(max = 255, message = "O campo nome deve conter no máximo 255 caracteres")
 	@Column(name = "nome_usuario")
 	private String nomeUsuario;
 
-	@NotNull(message = "O campo Sobrenome não pode ficar em branco")
 	@Size(max = 255, message = "O campo Sobrenome deve conter no máximo 255 caracteres")
 	@Column(name = "sobrenome_usuario")
 	private String sobrenomeUsuario;
 
 	@Transient
 	private String nomeCompleto;
+
+	@Size(max = 255, message = "O campo Email deve conter no máximo 255 caracteres")
+	@Column(name = "email_usuario", unique = true)
+	@Email(message = "O campo Email deve conter o caracter '@'")
+	private String emailUsuario;
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Column(name = "senha_usuario")
+	private String senhaUsuario;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "dataDeNascimento_usuario")
@@ -54,6 +62,14 @@ public class Usuario {
 	@Size(min = 11, max = 11, message = "O campo CPF deve conter 11 caracteres")
 	@Column(name = "cpf_usuario", unique = true)
 	private String cpfUsuario;
+
+	@Column(name = "telefone_usuario")
+	private long telefoneUsuario;
+
+	@Column(name = "compartilharDados_usuario")
+	private boolean compartilharDadosUsuario;
+
+		// ENDEREÇO
 
 	@Size(min = 5, max = 255, message = "O campo Endereço deve conter entre 5 e 255 caracteres")
 	@Column(name = "logradouroEndereco_usuario")
@@ -80,32 +96,34 @@ public class Usuario {
 	@Column(name = "estadoEndereco_usuario")
 	private EstadosEnum estadoEndereco;
 
-	@Column(name = "telefone_usuario")
-	private long telefoneUsuario;
-
+		// FORMA DE PAGAMENTO
+	
 	@Column(name = "formasDePagamento_usuario")
 	private FormasDePagamentoEnum formasDePagamento;
 
-	@NotNull(message = "O campo Email não pode ficar em branco")
-	@Size(min = 10, max = 255, message = "O campo Email deve conter entre 10 e 255 caracteres")
-	@Column(name = "email_usuario", unique = true)
-	@Email(message = "O campo Email deve conter o caracter '@'")
-	private String emailUsuario;
+	
+	// CONSTRUTOR
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	@NotNull(message = "O campo Senha não pode ficar em branco")
-	@Column(name = "senha_usuario")
-	private String senhaUsuario;
+	public Usuario() {
+	}
 
-	@Column(name = "compartilharDados_usuario")
-	private boolean compartilharDadosUsuario;
+	public Usuario(String nomeUsuario, String sobrenomeUsuario, String emailUsuario, String senhaUsuario,
+			boolean compartilharDadosUsuario) {
+		this.nomeUsuario = nomeUsuario;
+		this.sobrenomeUsuario = sobrenomeUsuario;
+		this.emailUsuario = emailUsuario;
+		this.senhaUsuario = senhaUsuario;
+		this.compartilharDadosUsuario = compartilharDadosUsuario;
+	}
 
+	
 	// RELACIONAMENTOS
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = { "usuario" })
 	private List<Pedido> pedidoUsuario;
 
+	
 	// GETTERS E SETTERS
 
 	public long getIdUsuario() {
