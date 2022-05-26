@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portoseguro.projetointegrador.dto.CadastroDTO;
@@ -51,9 +52,9 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuario.get());
 	}
 
-	@GetMapping("/email/{emailUsuario}")
-	public ResponseEntity<Usuario> getByEmailUsuario(@PathVariable String emailUsuario) {
-		Optional<Usuario> usuario = usuarioService.encontrarPorEmail(emailUsuario);
+	@GetMapping("/email/")
+	public ResponseEntity<Usuario> getByEmailUsuario(@RequestParam String email) {
+		Optional<Usuario> usuario = usuarioService.encontrarPorEmail(email);
 
 		if (usuario.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -63,14 +64,14 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginDTO> login(@RequestBody Optional<LoginDTO> user) {
-		return usuarioService.logar(user).map(resp -> ResponseEntity.ok(resp))
+	public ResponseEntity<LoginDTO> login(@RequestBody Optional<LoginDTO> usuarioLogin) {
+		return usuarioService.logar(usuarioLogin).map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
 	@PostMapping("/cadastrar")
 	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody CadastroDTO usuario) {
-		return ResponseEntity.ok(usuarioService.cadastrarUsuario(usuario));
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.cadastrarUsuario(usuario));
 	}
 
 	@PutMapping("/update")
@@ -78,11 +79,11 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioService.atualizarUsuario(usuario));
 	}
 
-	@DeleteMapping("/delete/{idUsuario}")
+	@DeleteMapping("/delete/{emailUsuario}")
 	public ResponseEntity<Usuario> deleteUsuario(@PathVariable String emailUsuario) {
 		usuarioService.deletarUsuario(emailUsuario);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
-	
+
 }

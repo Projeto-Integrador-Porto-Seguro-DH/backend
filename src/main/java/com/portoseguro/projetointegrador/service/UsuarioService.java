@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.portoseguro.projetointegrador.dto.CadastroDTO;
 import com.portoseguro.projetointegrador.dto.LoginDTO;
@@ -44,93 +46,133 @@ public class UsuarioService {
 		return buscaPorEmail;
 	}
 
-	public boolean verificarUsuarioExistente(Usuario usuario) {
-		Optional<Usuario> usuarioNoBD = usuarioRepository.findByEmailUsuarioIgnoreCase(usuario.getEmailUsuario());
-
-		if (usuarioNoBD.isPresent()) {
-			return true;
-		}
-
-		return false;
-	}
-	
-	public void verificarEmailValido(String emailUsuario) {
-		final String REGEX_EMAIL = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
-
-		if (!emailUsuario.matches(REGEX_EMAIL)) {
-			throw new IllegalStateException("Email inválido!");
-		}
-	}
-	
-	public void verificarSenhaValida(String senhaUsuario) {
-		final String REGEX_SENHA = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$";
-
-		if (!senhaUsuario.matches(REGEX_SENHA)) {
-			throw new IllegalStateException("Senha inválida. Ela deve conter no mínimo:\n"
-					+ "\t- Entre 8 e 16 caracteres;\n"
-					+ "\t- 1 caracter minúsculo;\n"
-					+ "\t- 1 caracter maiúsculo;\n"
-					+ "\t- 1 digito numérico.");
-		}
-	}
-
 	@Transactional
 	public Usuario cadastrarUsuario(CadastroDTO usuarioDto) {
 		Usuario usuario = usuarioDto.criarUsuarioModel();
-		
+
 		verificarEmailValido(usuario.getEmailUsuario());
-		
-		if (verificarUsuarioExistente(usuario)) {
-			throw new IllegalStateException("Usuário já existe!");
+
+		if (verificarUsuarioExistente(usuario).isPresent()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O email já está cadastrado.");
 		}
 
 		verificarSenhaValida(usuario.getSenhaUsuario());
 
-		String senhaEncoder = new BCryptPasswordEncoder().encode(usuario.getSenhaUsuario());
-		usuario.setSenhaUsuario(senhaEncoder);
+		usuario.setSenhaUsuario(criptografarSenha(usuario.getSenhaUsuario()));
 
 		return usuarioRepository.save(usuario);
 	}
 
-	public Optional<LoginDTO> logar(Optional<LoginDTO> user) {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		Optional<Usuario> usuario = usuarioRepository.findByNomeUsuarioIgnoreCase(user.get().getNomeUsuario());
+	public Optional<LoginDTO> logar(Optional<LoginDTO> usuarioLogin) {
+		Optional<Usuario> usuarioNoBD = usuarioRepository
+				.findByEmailUsuarioIgnoreCase(usuarioLogin.get().getEmailUsuario());
 
-		if (usuario.isPresent()) {
-			if (encoder.matches(user.get().getSenhaUsuario(), usuario.get().getSenhaUsuario())) {
-				String auth = user.get().getNomeUsuario() + ":" + user.get().getSenhaUsuario();
-				byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-				String authHeader = "Basic" + new String(encodeAuth);
-				user.get().setToken(authHeader);
-				user.get().setNomeUsuario(usuario.get().getNomeUsuario());
+		String senhaDigitada = usuarioLogin.get().getSenhaUsuario();
+		String senhaSalvaNoBD = usuarioNoBD.get().getSenhaUsuario();
 
-				return user;
+		if (usuarioNoBD.isPresent()) {
+			if (compararSenhas(senhaDigitada, senhaSalvaNoBD)) {
+
+				usuarioLogin.get().setToken(
+						gerarBasicToken(usuarioLogin.get().getEmailUsuario(), usuarioLogin.get().getSenhaUsuario()));
+
+				usuarioLogin.get().setIdUsuario(usuarioNoBD.get().getIdUsuario());
+				usuarioLogin.get().setNomeUsuario(usuarioNoBD.get().getNomeUsuario());
+				usuarioLogin.get().setSobrenomeUsuario(usuarioNoBD.get().getSobrenomeUsuario());
+
+				return usuarioLogin;
 			}
 		}
-		return null;
 
+		return null;
 	}
-	
+
 	@Transactional
 	public Usuario atualizarUsuario(Usuario usuario) {
+		if (verificarUsuarioExistente(usuario).isEmpty()) {
 
-		if (!verificarUsuarioExistente(usuario)) {
-			throw new IllegalStateException("Usuário não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
+
+		} else {
+			if (usuario.getSenhaUsuario() != null && !usuario.getSenhaUsuario().isBlank()) {
+
+				String senhaNova = usuario.getSenhaUsuario();
+				String senhaAntiga = verificarUsuarioExistente(usuario).get().getSenhaUsuario();
+
+				if (compararSenhas(senhaNova, senhaAntiga)) {
+
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"A nova senha deve ser diferente da antiga.");
+
+				} else {
+
+					verificarSenhaValida(usuario.getSenhaUsuario());
+
+					usuario.setSenhaUsuario(criptografarSenha(senhaNova));
+				}
+			}
+
+			return usuarioRepository.save(usuario);
 		}
-
-		return usuarioRepository.save(usuario);
 	}
 
 	@Transactional
 	public void deletarUsuario(String emailUsuario) {
 		Optional<Usuario> usuario = usuarioRepository.findByEmailUsuarioIgnoreCase(emailUsuario);
-		Long idUsuario = usuario.get().getIdUsuario();
 
 		if (usuario.isEmpty()) {
-			throw new IllegalStateException("Usuario não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		usuarioRepository.deleteById(idUsuario);
+		usuarioRepository.deleteById(usuario.get().getIdUsuario());
+	}
+
+	public Optional<Usuario> verificarUsuarioExistente(Usuario usuario) {
+		Optional<Usuario> usuarioNoBD = usuarioRepository.findByEmailUsuarioIgnoreCase(usuario.getEmailUsuario());
+
+		if (usuarioNoBD.isPresent()) {
+			return usuarioNoBD;
+		}
+
+		return Optional.empty();
+	}
+
+	public void verificarEmailValido(String emailUsuario) {
+		final String REGEX_EMAIL = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
+
+		if (!emailUsuario.matches(REGEX_EMAIL)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email inválido!");
+		}
+	}
+
+	public void verificarSenhaValida(String senhaUsuario) {
+		final String REGEX_SENHA = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$";
+
+		if (!senhaUsuario.matches(REGEX_SENHA)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Senha inválida. Ela deve conter: Entre 8 e 16 caracteres;" + " No mínimo 1 caracter minúsculo;"
+							+ " No mínimo 1 caracter maiúsculo;" + " No mínimo 1 dígito numérico.");
+		}
+	}
+
+	public boolean compararSenhas(String senhaDigitada, String senhaSalvaNoBD) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		return encoder.matches(senhaDigitada, senhaSalvaNoBD);
+	}
+
+	private String criptografarSenha(String senha) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		return encoder.encode(senha);
+	}
+
+	public String gerarBasicToken(String usuario, String senha) {
+		String token = usuario + ":" + senha;
+
+		byte[] encodeAuth = Base64.encodeBase64(token.getBytes(Charset.forName("US-ASCII")));
+
+		return "Basic " + new String(encodeAuth);
 	}
 
 }
