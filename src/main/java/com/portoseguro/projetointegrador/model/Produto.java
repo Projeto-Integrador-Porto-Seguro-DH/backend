@@ -51,6 +51,25 @@ public class Produto {
 	@Column(name = "disponivel_produto", columnDefinition = "boolean default '1'")
 	private boolean produtoDisponivel;
 
+	//CONSTRUTORES
+	
+	public Produto() {}
+	
+	public Produto(Long idProduto,
+			String nomeProduto,
+			String descricaoProduto,
+			BigDecimal precoUnitarioProduto,
+			int estoqueProduto,
+			Boolean produtoDisponivel) {
+		this.idProduto = idProduto;
+		this.nomeProduto = nomeProduto;
+		this.descricaoProduto = descricaoProduto;
+		this.precoUnitarioProduto = precoUnitarioProduto;
+		this.estoqueProduto = estoqueProduto;
+		this.produtoDisponivel = produtoDisponivel;
+	}
+	
+	
 	// RELACIONAMENTOS
 
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
