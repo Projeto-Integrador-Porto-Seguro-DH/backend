@@ -63,24 +63,24 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 
-	public Optional<LoginDTO> logar(Optional<LoginDTO> usuarioLogin) {
+	public Optional<LoginDTO> logar(LoginDTO usuarioLogin) {
 		Optional<Usuario> usuarioNoBD = usuarioRepository
-				.findByEmailUsuarioIgnoreCase(usuarioLogin.get().getEmailUsuario());
+				.findByEmailUsuarioIgnoreCase(usuarioLogin.getEmailUsuario());
 
-		String senhaDigitada = usuarioLogin.get().getSenhaUsuario();
+		String senhaDigitada = usuarioLogin.getSenhaUsuario();
 		String senhaSalvaNoBD = usuarioNoBD.get().getSenhaUsuario();
 
 		if (usuarioNoBD.isPresent()) {
 			if (compararSenhas(senhaDigitada, senhaSalvaNoBD)) {
 
-				usuarioLogin.get().setToken(
-						gerarBasicToken(usuarioLogin.get().getEmailUsuario(), usuarioLogin.get().getSenhaUsuario()));
+				usuarioLogin.setToken(
+						gerarBasicToken(usuarioLogin.getEmailUsuario(), usuarioLogin.getSenhaUsuario()));
 
-				usuarioLogin.get().setIdUsuario(usuarioNoBD.get().getIdUsuario());
-				usuarioLogin.get().setNomeUsuario(usuarioNoBD.get().getNomeUsuario());
-				usuarioLogin.get().setSobrenomeUsuario(usuarioNoBD.get().getSobrenomeUsuario());
+				usuarioLogin.setIdUsuario(usuarioNoBD.get().getIdUsuario());
+				usuarioLogin.setNomeUsuario(usuarioNoBD.get().getNomeUsuario());
+				usuarioLogin.setSobrenomeUsuario(usuarioNoBD.get().getSobrenomeUsuario());
 
-				return usuarioLogin;
+				return Optional.of(usuarioLogin);
 			}
 		}
 
@@ -90,30 +90,80 @@ public class UsuarioService {
 	@Transactional
 	public Usuario atualizarUsuario(Usuario usuario) {
 		if (verificarUsuarioExistente(usuario).isEmpty()) {
-
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
+		}
 
-		} else {
-			if (usuario.getSenhaUsuario() != null && !usuario.getSenhaUsuario().isBlank()) {
+		Usuario usuarioNoBD = verificarUsuarioExistente(usuario).get();
 
-				String senhaNova = usuario.getSenhaUsuario();
-				String senhaAntiga = verificarUsuarioExistente(usuario).get().getSenhaUsuario();
+		if (usuario.getSenhaUsuario() != null && !usuario.getSenhaUsuario().isBlank()) {
 
-				if (compararSenhas(senhaNova, senhaAntiga)) {
+			String senhaDeComparacao = usuario.getConfirmacaoSenha();
+			String senhaNova = usuario.getSenhaUsuario();
+			String senhaAntiga = usuarioNoBD.getSenhaUsuario();
 
-					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-							"A nova senha deve ser diferente da antiga.");
-
-				} else {
-
-					verificarSenhaValida(usuario.getSenhaUsuario());
-
-					usuario.setSenhaUsuario(criptografarSenha(senhaNova));
-				}
+			/*
+			 * PARA ATUALIZAR A SENHA É NECESSÁRIO ENVIAR A SENHA ATUAL JUNTO
+			 * ESTE if COMPARA SE A SENHA ENVIADA ESTÁ CORRETA 
+			*/
+			if (!compararSenhas(senhaDeComparacao, senhaAntiga)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha atual está incorreta!");
 			}
 
-			return usuarioRepository.save(usuario);
+			if (compararSenhas(senhaNova, senhaAntiga)) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A nova senha deve ser diferente da antiga.");
+			}
+			
+			verificarSenhaValida(usuario.getSenhaUsuario());
+
+			usuarioNoBD.setSenhaUsuario(criptografarSenha(senhaNova));
+
 		}
+
+		// DADOS PESSOAIS
+		if (usuario.getNomeUsuario() != usuarioNoBD.getNomeUsuario()) {
+			usuarioNoBD.setNomeUsuario(usuario.getNomeUsuario());
+		}
+		if (usuario.getSobrenomeUsuario() != usuarioNoBD.getSobrenomeUsuario()) {
+			usuarioNoBD.setSobrenomeUsuario(usuario.getSobrenomeUsuario());
+		}
+		if (usuario.getDataDeNascimento() != usuarioNoBD.getDataDeNascimento()) {
+			usuarioNoBD.setDataDeNascimento(usuario.getDataDeNascimento());
+		}
+		if (usuario.getCpfUsuario() != usuarioNoBD.getCpfUsuario()) {
+			usuarioNoBD.setCpfUsuario(usuario.getCpfUsuario());
+		}
+		if (usuario.getTelefoneUsuario() != usuarioNoBD.getTelefoneUsuario()) {
+			usuarioNoBD.setTelefoneUsuario(usuario.getTelefoneUsuario());
+		}
+		if (usuario.isCompartilharDadosUsuario() != usuarioNoBD.isCompartilharDadosUsuario()) {
+			usuarioNoBD.setCompartilharDadosUsuario(usuario.isCompartilharDadosUsuario());
+		}
+
+		// ENDEREÇO
+		if (usuario.getCepEndereco() != usuarioNoBD.getCepEndereco()) {
+			usuarioNoBD.setCepEndereco(usuario.getCepEndereco());
+		}
+		if (usuario.getLogradouroEndereco() != usuarioNoBD.getLogradouroEndereco()) {
+			usuarioNoBD.setLogradouroEndereco(usuario.getLogradouroEndereco());
+		}
+		if (usuario.getNumeroEndereco() != usuarioNoBD.getNumeroEndereco()) {
+			usuarioNoBD.setNumeroEndereco(usuario.getNumeroEndereco());
+		}
+		if (usuario.getBairroEndereco() != usuarioNoBD.getBairroEndereco()) {
+			usuarioNoBD.setBairroEndereco(usuario.getBairroEndereco());
+		}
+		if (usuario.getComplementoEndereco() != usuarioNoBD.getComplementoEndereco()) {
+			usuarioNoBD.setComplementoEndereco(usuario.getComplementoEndereco());
+		}
+		if (usuario.getCidadeEndereco() != usuarioNoBD.getCidadeEndereco()) {
+			usuarioNoBD.setCidadeEndereco(usuario.getCidadeEndereco());
+		}
+		if (usuario.getEstadoEndereco() != usuarioNoBD.getEstadoEndereco()) {
+			usuarioNoBD.setEstadoEndereco(usuario.getEstadoEndereco());
+		}
+
+		return usuarioRepository.save(usuarioNoBD);
+
 	}
 
 	@Transactional
@@ -174,5 +224,5 @@ public class UsuarioService {
 
 		return "Basic " + new String(encodeAuth);
 	}
-
+	
 }

@@ -43,9 +43,6 @@ public class Usuario {
 	@Column(name = "sobrenome_usuario")
 	private String sobrenomeUsuario;
 
-	@Transient
-	private String nomeCompleto;
-
 	@Size(max = 255, message = "O campo Email deve conter no máximo 255 caracteres")
 	@Column(name = "email_usuario", unique = true)
 	@Email(message = "O campo Email deve conter o caracter '@'")
@@ -54,6 +51,9 @@ public class Usuario {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "senha_usuario")
 	private String senhaUsuario;
+	
+	@Transient
+	private String confirmacaoSenha;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "dataDeNascimento_usuario")
@@ -148,10 +148,6 @@ public class Usuario {
 
 	public void setSobrenomeUsuario(String sobrenomeUsuario) {
 		this.sobrenomeUsuario = sobrenomeUsuario;
-	}
-
-	public String getNomeCompleto() {
-		return getNomeUsuario() + " " + getSobrenomeUsuario();
 	}
 
 	public LocalDate getDataDeNascimento() {
@@ -275,4 +271,14 @@ public class Usuario {
 		this.pedidoUsuario = pedidoUsuario;
 	}
 
+	public String getConfirmacaoSenha() {
+		return confirmacaoSenha;
+	}
+
+	public void setConfirmacaoSenha(String confirmacaoSenha) {
+		this.confirmacaoSenha = confirmacaoSenha;
+	}
+
+	
+	
 }
