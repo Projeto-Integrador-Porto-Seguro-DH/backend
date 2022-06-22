@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.portoseguro.projetointegrador.model.Produto;
 import com.portoseguro.projetointegrador.repository.ProdutosRepository;
@@ -63,11 +65,7 @@ public class ProdutoService {
 	public Produto cadastrarProduto(Produto produto) {
 		
 		if (verificarProdutoExistente(produto)) {
-			throw new IllegalStateException("Produto " + produto.getNomeProduto() + " já existe!");
-		}
-
-		if (produto.getEstoqueProduto() > 0) {
-			produto.setProdutoDisponivel(true);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto " + produto.getNomeProduto() + " já existe!");
 		}
 
 		return produtosRepository.save(produto);
@@ -77,11 +75,36 @@ public class ProdutoService {
 	public Produto atualizarProduto(Produto produto) {
 
 		if (!verificarProdutoExistente(produto)) {
-			throw new IllegalStateException("Produto" + produto.getNomeProduto() + "não existe!");
-
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto" + produto.getNomeProduto() + "não existe!");
 		}
 
-		return produtosRepository.save(produto);
+		Produto produtoNoBD = produtosRepository.findById(produto.getIdProduto()).get();
+
+		if (produtoNoBD.getNomeProduto() != produto.getNomeProduto()) {
+			produtoNoBD.setNomeProduto(produto.getNomeProduto());
+		}
+		
+		if (produtoNoBD.getDescricaoProduto() != produto.getDescricaoProduto()) {
+			produtoNoBD.setDescricaoProduto(produto.getDescricaoProduto());
+		}
+		
+		if (produtoNoBD.getPrecoUnitarioProduto() != produto.getPrecoUnitarioProduto()) {
+			produtoNoBD.setPrecoUnitarioProduto(produto.getPrecoUnitarioProduto());
+		}
+		
+		if (produtoNoBD.getEstoqueProduto() != produto.getEstoqueProduto()) {
+			produtoNoBD.setEstoqueProduto(produto.getEstoqueProduto());
+		}
+		
+		if (produtoNoBD.isProdutoDisponivel() != produto.isProdutoDisponivel()) {
+			produtoNoBD.setProdutoDisponivel(produto.isProdutoDisponivel());
+		}
+		
+		if(produtoNoBD.getCategoria().getIdCategoria() != produto.getCategoria().getIdCategoria()) {
+			produtoNoBD.setCategoria(produto.getCategoria());
+		}
+		
+		return produtosRepository.save(produtoNoBD);
 
 	}
 
@@ -90,7 +113,7 @@ public class ProdutoService {
 		Optional<Produto> produtoPorId = produtosRepository.findById(idProduto);
 
 		if (produtoPorId.isEmpty()) {
-			throw new IllegalStateException("Produto não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não existe!");
 		}
 
 		produtosRepository.deleteById(idProduto);

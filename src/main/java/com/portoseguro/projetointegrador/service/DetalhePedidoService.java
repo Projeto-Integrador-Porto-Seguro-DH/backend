@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
@@ -83,11 +85,11 @@ public class DetalhePedidoService {
 		int diferenca = estoque - quantidadePedida;
 
 		if (!produtoDisponivel) {
-			throw new IllegalStateException("Produto não disponível no estoque!");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto não disponível no estoque!");
 		}
 
 		if (diferenca < 0) {
-			throw new IllegalStateException(
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
 					"Não há quantidade disponível em estoque!" + "\nQuantidade disponível: " + estoque);
 		}
 	}
@@ -141,10 +143,9 @@ public class DetalhePedidoService {
 	}
 
 	@Transactional
-	public DetalhePedido cadastarDetalhes(DetalhePedido detalheDoPedido) {
+	public DetalhePedido cadastarDetalhes(DetalhePedido detalheDoPedido, long idDoPedido) {
 		Long idProduto = detalheDoPedido.getProduto().getIdProduto();
 		int quantidadeProduto = detalheDoPedido.getQuantidadeProduto();
-		Long idPedido = detalheDoPedido.getPedido().getIdPedido();
 
 		verificarDisponibilidadeDeProduto(idProduto, quantidadeProduto);
 
@@ -152,73 +153,10 @@ public class DetalhePedidoService {
 
 		BigDecimal subtotal = calcularSubtotal(detalheDoPedido, idProduto);
 
-		calcularTotalDoPedido(idPedido, subtotal);
+		calcularTotalDoPedido(idDoPedido, subtotal);
 
 		return detalhePedidoRepository.save(detalheDoPedido);
 	}
 
-	/* NÃO UTILIZADO NO MOMENTO
-	 * VER COMENTÁRIO ABAIXO
-	 * 
-	 * 
-	 * public boolean verificarExistenciaDetalhePedido(DetalhePedido
-	 * detalheDoPedido) { Optional<DetalhePedido> detalheExistente =
-	 * detalhePedidoRepository .findById(detalheDoPedido.getIdDetalhePedido());
-	 * 
-	 * if (detalheExistente.isPresent()) { return true; }
-	 * 
-	 * return false; }
-	 */
-
-	//
-	
-	/*
-	 * MÉTODO DE ATUALIZAR NÃO UTILIZADO Nenhum usuário deve ter autorização para
-	 * atualizar o Detalhe do pedido após realizado!
-	 * 
-	 * 
-	 * 
-	 * @Transactional public DetalhePedido atualizarDetalhePedido(DetalhePedido
-	 * detalheDoPedido) { boolean detalheExiste =
-	 * verificarExistenciaDetalhePedido(detalheDoPedido);
-	 * 
-	 * if (!detalheExiste) { throw new
-	 * IllegalStateException("Detalhe de pedido inexistente!"); }
-	 * 
-	 * Long idDoDetalhe = detalheDoPedido.getIdDetalhePedido();
-	 * Optional<DetalhePedido> detalheNoBD =
-	 * detalhePedidoRepository.findById(idDoDetalhe);
-	 * 
-	 * int quantidadeNoBD = detalheNoBD.get().getQuantidadeProduto(); int
-	 * quantidadeAtualizada = detalheDoPedido.getQuantidadeProduto();
-	 * 
-	 * if (quantidadeAtualizada != quantidadeNoBD) { Long idDoProduto =
-	 * detalheDoPedido.getProduto().getIdProduto();
-	 * 
-	 * atualizarEstoque(idDoProduto, quantidadeNoBD, quantidadeAtualizada);
-	 * calcularSubtotal(detalheDoPedido, idDoProduto); }
-	 * 
-	 * return detalhePedidoRepository.save(detalheDoPedido); }
-	 */
-
-	//
-	
-	/*
-	 * MÉTODO NÃO UTILIZADO PELOS MESMOS MOTIVOS ACIMA
-	 * 
-	 * 
-	 * 
-	 * @Transactional public void deletarDetalhe(Long idDetalhePedido) {
-	 * Optional<DetalhePedido> detalhePedidoNoBD =
-	 * detalhePedidoRepository.findById(idDetalhePedido); DetalhePedido
-	 * detalhePedido = detalhePedidoNoBD.get();
-	 * 
-	 * if (detalhePedidoNoBD.isEmpty()) { throw new
-	 * IllegalStateException("Detalhe de pedido inexistente!"); }
-	 * 
-	 * reporEstoquePedidoCancelado(detalhePedidoNoBD.get());
-	 * 
-	 * detalhePedidoRepository.deleteById(idDetalhePedido); }
-	 */
 
 }

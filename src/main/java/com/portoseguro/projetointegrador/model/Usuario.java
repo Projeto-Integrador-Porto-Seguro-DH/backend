@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.portoseguro.projetointegrador.enums.EstadosEnum;
-import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 
 @Entity
 @Table(name = "tb_usuario")
@@ -59,12 +58,11 @@ public class Usuario {
 	@Column(name = "dataDeNascimento_usuario")
 	private LocalDate dataDeNascimento;
 
-	@Size(min = 11, max = 11, message = "O campo CPF deve conter 11 caracteres")
 	@Column(name = "cpf_usuario", unique = true)
 	private String cpfUsuario;
 
 	@Column(name = "telefone_usuario")
-	private long telefoneUsuario;
+	private String telefoneUsuario;
 
 	@Column(name = "compartilharDados_usuario")
 	private boolean compartilharDadosUsuario;
@@ -76,10 +74,10 @@ public class Usuario {
 	private String logradouroEndereco;
 
 	@Column(name = "cepEndereco_usuario")
-	private int cepEndereco;
+	private String cepEndereco;
 
 	@Column(name = "numeroEndereco_usuario")
-	private int numeroEndereco;
+	private String numeroEndereco;
 
 	@Size(min = 2, max = 255, message = "O Bairro deve conter entre 2 e 255 caracteres")
 	@Column(name = "bairroEndereco_usuario")
@@ -95,11 +93,6 @@ public class Usuario {
 
 	@Column(name = "estadoEndereco_usuario")
 	private EstadosEnum estadoEndereco;
-
-		// FORMA DE PAGAMENTO
-	
-	@Column(name = "formasDePagamento_usuario")
-	private FormasDePagamentoEnum formasDePagamento;
 
 	
 	// CONSTRUTOR
@@ -150,6 +143,27 @@ public class Usuario {
 		this.sobrenomeUsuario = sobrenomeUsuario;
 	}
 
+	public String getEmailUsuario() {
+		return emailUsuario;
+	}
+
+	public void setEmailUsuario(String emailUsuario) {
+		this.emailUsuario = emailUsuario;
+	}
+
+	@JsonIgnore
+	public String getSenhaUsuario() {
+		return senhaUsuario;
+	}
+
+	public void setSenhaUsuario(String senhaUsuario) {
+		this.senhaUsuario = senhaUsuario;
+	}
+
+	public String getConfirmacaoSenha() {
+		return confirmacaoSenha;
+	}
+
 	public LocalDate getDataDeNascimento() {
 		return dataDeNascimento;
 	}
@@ -166,6 +180,22 @@ public class Usuario {
 		this.cpfUsuario = cpfUsuario;
 	}
 
+	public String getTelefoneUsuario() {
+		return telefoneUsuario;
+	}
+
+	public void setTelefoneUsuario(String telefoneUsuario) {
+		this.telefoneUsuario = telefoneUsuario;
+	}
+
+	public boolean isCompartilharDadosUsuario() {
+		return compartilharDadosUsuario;
+	}
+
+	public void setCompartilharDadosUsuario(boolean compartilharDadosUsuario) {
+		this.compartilharDadosUsuario = compartilharDadosUsuario;
+	}
+
 	public String getLogradouroEndereco() {
 		return logradouroEndereco;
 	}
@@ -174,19 +204,19 @@ public class Usuario {
 		this.logradouroEndereco = logradouroEndereco;
 	}
 
-	public int getCepEndereco() {
+	public String getCepEndereco() {
 		return cepEndereco;
 	}
 
-	public void setCepEndereco(int cepEndereco) {
+	public void setCepEndereco(String cepEndereco) {
 		this.cepEndereco = cepEndereco;
 	}
 
-	public int getNumeroEndereco() {
+	public String getNumeroEndereco() {
 		return numeroEndereco;
 	}
 
-	public void setNumeroEndereco(int numeroEndereco) {
+	public void setNumeroEndereco(String numeroEndereco) {
 		this.numeroEndereco = numeroEndereco;
 	}
 
@@ -222,47 +252,6 @@ public class Usuario {
 		this.estadoEndereco = estadoEndereco;
 	}
 
-	public long getTelefoneUsuario() {
-		return telefoneUsuario;
-	}
-
-	public void setTelefoneUsuario(long telefoneUsuario) {
-		this.telefoneUsuario = telefoneUsuario;
-	}
-
-	public FormasDePagamentoEnum getFormasDePagamento() {
-		return formasDePagamento;
-	}
-
-	public void setFormasDePagamento(FormasDePagamentoEnum formasDePagamento) {
-		this.formasDePagamento = formasDePagamento;
-	}
-
-	public String getEmailUsuario() {
-		return emailUsuario;
-	}
-
-	public void setEmailUsuario(String emailUsuario) {
-		this.emailUsuario = emailUsuario;
-	}
-
-	@JsonIgnore
-	public String getSenhaUsuario() {
-		return senhaUsuario;
-	}
-
-	public void setSenhaUsuario(String senhaUsuario) {
-		this.senhaUsuario = senhaUsuario;
-	}
-
-	public boolean isCompartilharDadosUsuario() {
-		return compartilharDadosUsuario;
-	}
-
-	public void setCompartilharDadosUsuario(boolean compartilharDadosUsuario) {
-		this.compartilharDadosUsuario = compartilharDadosUsuario;
-	}
-
 	public List<Pedido> getPedidoUsuario() {
 		return pedidoUsuario;
 	}
@@ -271,13 +260,10 @@ public class Usuario {
 		this.pedidoUsuario = pedidoUsuario;
 	}
 
-	public String getConfirmacaoSenha() {
-		return confirmacaoSenha;
-	}
+	
+	
 
-	public void setConfirmacaoSenha(String confirmacaoSenha) {
-		this.confirmacaoSenha = confirmacaoSenha;
-	}
+	
 
 	
 	

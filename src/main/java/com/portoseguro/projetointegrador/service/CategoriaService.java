@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.portoseguro.projetointegrador.model.Categoria;
 import com.portoseguro.projetointegrador.repository.CategoriaRepository;
@@ -56,9 +58,10 @@ public class CategoriaService {
 
 	@Transactional
 	public Categoria cadastrarCategoria(Categoria categoria) {
-		
+
 		if (verificarCategoriaExistente(categoria)) {
-			throw new IllegalStateException("Categoria " + categoria.getNomeCategoria() + " já existe!");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Categoria " + categoria.getNomeCategoria() + " já existe!");
 		}
 
 		return categoriaRepository.save(categoria);
@@ -66,20 +69,31 @@ public class CategoriaService {
 
 	@Transactional
 	public Categoria atualizarCategoria(Categoria categoria) {
-		
+
 		if (!verificarCategoriaExistente(categoria)) {
-			throw new IllegalStateException("Categoria " + categoria.getNomeCategoria() + " não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					"Categoria " + categoria.getNomeCategoria() + " não existe!");
+		}
+
+		Categoria categoriaNoBD = categoriaRepository.findById(categoria.getIdCategoria()).get();
+
+		if (categoriaNoBD.getNomeCategoria() != categoria.getNomeCategoria()) {
+			categoriaNoBD.setNomeCategoria(categoria.getNomeCategoria());
+		}
+
+		if (categoriaNoBD.getDescricaoCategoria() != categoria.getDescricaoCategoria()) {
+			categoriaNoBD.setDescricaoCategoria(categoria.getDescricaoCategoria());
 		}
 
 		return categoriaRepository.save(categoria);
 	}
-	
+
 	@Transactional
 	public void deletarCategoria(Long id) {
 		Optional<Categoria> categoriaPeloId = categoriaRepository.findById(id);
-		
+
 		if (categoriaPeloId.isEmpty()) {
-			throw new IllegalStateException("Categoria não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não existe!");
 		}
 
 		categoriaRepository.deleteById(id);

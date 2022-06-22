@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 
 @Entity
@@ -42,9 +43,12 @@ public class Pedido {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "status_pedido")
 	private StatusPedidoEnum statusPedido;
-	
+
 	@Transient
 	String mensagemDeStatusPedido;
+
+	@Column(name = "formasDePagamento_usuario")
+	private FormasDePagamentoEnum formasDePagamento;
 
 	@Column(name = "codigo_envio")
 	private String codigoEnvio;
@@ -61,6 +65,7 @@ public class Pedido {
 	@Column(name = "valorTotalPedido_pedido", columnDefinition = "decimal(19,2) default '0.00'")
 	private BigDecimal valorTotalPedido;
 
+	
 	// RELACIONAMENTOS
 
 	@ManyToOne
@@ -72,6 +77,7 @@ public class Pedido {
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
 
+	
 	// GETTERS E SETTERS
 
 	public Long getIdPedido() {
@@ -86,6 +92,10 @@ public class Pedido {
 		return dataPedido;
 	}
 
+	public void setDataPedido(LocalDateTime dataPedido) {
+		this.dataPedido = dataPedido;
+	}
+
 	@JsonIgnore
 	public StatusPedidoEnum getStatusPedido() {
 		return statusPedido;
@@ -94,9 +104,13 @@ public class Pedido {
 	public void setStatusPedido(StatusPedidoEnum statusPedido) {
 		this.statusPedido = statusPedido;
 	}
-	
+
 	public String getMensagemDeStatusPedido() {
-		return statusPedido.getDescricao();
+		return mensagemDeStatusPedido;
+	}
+
+	public void setMensagemDeStatusPedido(String mensagemDeStatusPedido) {
+		this.mensagemDeStatusPedido = mensagemDeStatusPedido;
 	}
 
 	public String getCodigoEnvio() {
@@ -129,6 +143,14 @@ public class Pedido {
 
 	public void setValorTotalPedido(BigDecimal valorTotalPedido) {
 		this.valorTotalPedido = valorTotalPedido;
+	}
+
+	public FormasDePagamentoEnum getFormasDePagamento() {
+		return formasDePagamento;
+	}
+
+	public void setFormasDePagamento(FormasDePagamentoEnum formasDePagamento) {
+		this.formasDePagamento = formasDePagamento;
 	}
 
 	public Usuario getUsuario() {

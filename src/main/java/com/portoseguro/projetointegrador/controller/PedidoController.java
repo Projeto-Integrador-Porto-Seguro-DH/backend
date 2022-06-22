@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
 import com.portoseguro.projetointegrador.service.PedidoService;
 
@@ -53,23 +54,18 @@ public class PedidoController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Pedido> postPedido(@RequestBody @Valid Pedido pedido) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.cadastrarPedido(pedido));
+	public ResponseEntity<Pedido> postPedido(@RequestBody 
+			long idUsuario, 
+			@Valid Pedido pedido,
+			List<DetalhePedido> detalhes) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(pedidoService.cadastrarPedido(idUsuario, pedido, detalhes));
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Pedido> putPedido(@RequestBody @Valid Pedido pedido) {
-		return ResponseEntity.ok(pedidoService.atualizarPedido(pedido));
+	public ResponseEntity<Pedido> putPedido(@RequestBody Pedido pedido) {
+		return ResponseEntity.ok(pedidoService.atualizarStatusPedido(pedido));
 	}
 
-	/*
-	 * NÃO UTILIZADO NO MOMENTO
-	 * 
-	 * @DeleteMapping("delete/{idPedido}") public ResponseEntity<Object>
-	 * deletePedido(@PathVariable Long idPedido) {
-	 * pedidoService.deletarPedido(idPedido);
-	 * 
-	 * return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); }
-	 */
 
 }

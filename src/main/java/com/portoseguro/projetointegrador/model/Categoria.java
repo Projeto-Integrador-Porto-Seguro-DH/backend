@@ -31,7 +31,6 @@ public class Categoria {
 	@Column(name = "nome_categoria")
 	private String nomeCategoria;
 
-	@NotNull(message = "O campo descrição precisa ser preenchido")
 	@Size(min = 10, max = 255, message = "O campo descrição deve conter entre 10 e 255 caracteres")
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
