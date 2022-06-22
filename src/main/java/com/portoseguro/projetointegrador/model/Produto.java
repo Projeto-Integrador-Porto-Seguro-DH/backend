@@ -48,6 +48,9 @@ public class Produto {
 	@Column(name = "estoque_produto")
 	private int estoqueProduto;
 
+	@Column(name = "foto_prodto")
+	private String fotoProduto;
+
 	@Column(name = "disponivel_produto", columnDefinition = "boolean default '1'")
 	private boolean produtoDisponivel;
 
@@ -101,6 +104,14 @@ public class Produto {
 
 	public void setEstoqueProduto(int estoqueProduto) {
 		this.estoqueProduto = estoqueProduto;
+	}
+
+	public String getFotoProduto() {
+		return fotoProduto;
+	}
+
+	public void setFotoProduto(String fotoProduto) {
+		this.fotoProduto = fotoProduto;
 	}
 
 	public boolean isProdutoDisponivel() {
