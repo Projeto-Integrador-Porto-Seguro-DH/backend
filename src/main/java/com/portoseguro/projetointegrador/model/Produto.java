@@ -30,12 +30,12 @@ public class Produto {
 	private Long idProduto;
 
 	@NotNull(message = "O campo nome deve ser preenchido")
-	@Size(min = 5, max = 255, message = "O campo nome do produto deve conter entre 5 e 255 caracteres")
+	@Size(min = 1, max = 255, message = "O campo nome do produto deve conter no máximo 255 caracteres")
 	@Column(name = "nome_produto")
 	private String nomeProduto;
 
 	@NotNull(message = "O campo descrição deve ser preenchido")
-	@Size(min = 5, max = 255, message = "O campo descrição do produto deve conter entre 5 e 255 caracteres")
+	@Size(min = 1, max = 255, message = "O campo descrição do produto deve conter no máximo 255 caracteres")
 	@Column(name = "descricao_produto")
 	private String descricaoProduto;
 

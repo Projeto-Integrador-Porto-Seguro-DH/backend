@@ -51,7 +51,7 @@ public class ProdutoService {
 	}
 
 	public boolean verificarProdutoExistente(Produto produto) {
-		Optional<Produto> produtoExistente = produtosRepository.findByNomeProdutoIgnoreCase(produto.getNomeProduto());
+		Optional<Produto> produtoExistente = produtosRepository.findById(produto.getIdProduto());
 
 		if (produtoExistente.isPresent()) {
 			return true;

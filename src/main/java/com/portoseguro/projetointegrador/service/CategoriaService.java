@@ -47,7 +47,7 @@ public class CategoriaService {
 
 	public boolean verificarCategoriaExistente(Categoria categoria) {
 		Optional<Categoria> categoriaExistente = categoriaRepository
-				.findByNomeCategoriaIgnoreCase(categoria.getNomeCategoria());
+				.findById(categoria.getIdCategoria());
 
 		if (categoriaExistente.isPresent()) {
 			return true;
