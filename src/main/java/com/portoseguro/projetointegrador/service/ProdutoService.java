@@ -63,8 +63,9 @@ public class ProdutoService {
 
 	@Transactional
 	public Produto cadastrarProduto(Produto produto) {
+		Optional<Produto> produtoExistente = produtosRepository.findByNomeProdutoIgnoreCase(produto.getNomeProduto());
 		
-		if (verificarProdutoExistente(produto)) {
+		if (!produtoExistente.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto " + produto.getNomeProduto() + " já existe!");
 		}
 

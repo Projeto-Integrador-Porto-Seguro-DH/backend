@@ -58,8 +58,10 @@ public class CategoriaService {
 
 	@Transactional
 	public Categoria cadastrarCategoria(Categoria categoria) {
-
-		if (verificarCategoriaExistente(categoria)) {
+		Optional<Categoria> categoriaExistente = categoriaRepository
+				.findByNomeCategoriaIgnoreCase(categoria.getNomeCategoria());
+		
+		if (!categoriaExistente.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Categoria " + categoria.getNomeCategoria() + " já existe!");
 		}
