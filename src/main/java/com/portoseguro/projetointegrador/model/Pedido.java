@@ -8,20 +8,16 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 
@@ -40,12 +36,8 @@ public class Pedido {
 	@Column(name = "dataPedido_pedido")
 	private LocalDateTime dataPedido = LocalDateTime.now();
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "status_pedido")
 	private StatusPedidoEnum statusPedido;
-
-	@Transient
-	String mensagemDeStatusPedido;
 
 	@Column(name = "formasDePagamento_usuario")
 	private FormasDePagamentoEnum formasDePagamento;
@@ -73,7 +65,7 @@ public class Pedido {
 	@JsonIgnoreProperties("pedidoUsuario")
 	private Usuario usuario;
 
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.PERSIST)
 	@JsonIgnoreProperties("pedido")
 	private List<DetalhePedido> detalhePedido;
 
@@ -96,21 +88,12 @@ public class Pedido {
 		this.dataPedido = dataPedido;
 	}
 
-	@JsonIgnore
 	public StatusPedidoEnum getStatusPedido() {
 		return statusPedido;
 	}
 
 	public void setStatusPedido(StatusPedidoEnum statusPedido) {
 		this.statusPedido = statusPedido;
-	}
-
-	public String getMensagemDeStatusPedido() {
-		return mensagemDeStatusPedido;
-	}
-
-	public void setMensagemDeStatusPedido(String mensagemDeStatusPedido) {
-		this.mensagemDeStatusPedido = mensagemDeStatusPedido;
 	}
 
 	public String getCodigoEnvio() {

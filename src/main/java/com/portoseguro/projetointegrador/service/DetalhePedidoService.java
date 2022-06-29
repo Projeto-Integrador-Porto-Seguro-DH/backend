@@ -1,6 +1,7 @@
 package com.portoseguro.projetointegrador.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,20 +144,30 @@ public class DetalhePedidoService {
 	}
 
 	@Transactional
-	public DetalhePedido cadastarDetalhes(DetalhePedido detalheDoPedido, long idDoPedido) {
-		Long idProduto = detalheDoPedido.getProduto().getIdProduto();
-		int quantidadeProduto = detalheDoPedido.getQuantidadeProduto();
+	public List<DetalhePedido> cadastarDetalhes(List<DetalhePedido> detalhesDoPedido, long idDoPedido) {
+		List<DetalhePedido> listaDetalhesSalvos = new ArrayList<DetalhePedido>();
+		Pedido pedidoNoBancoDeDados = pedidoRepository.findById(idDoPedido).get();
 
-		verificarDisponibilidadeDeProduto(idProduto, quantidadeProduto);
+		for (int i = 0; i < detalhesDoPedido.size(); i++) {
+			verificarDisponibilidadeDeProduto(detalhesDoPedido.get(i).getProduto().getIdProduto(),
+					detalhesDoPedido.get(i).getQuantidadeProduto());
 
-		atualizarEstoque(idProduto, quantidadeProduto);
+			atualizarEstoque(detalhesDoPedido.get(i).getProduto().getIdProduto(),
+					detalhesDoPedido.get(i).getQuantidadeProduto());
 
-		BigDecimal subtotal = calcularSubtotal(detalheDoPedido, idProduto);
+			BigDecimal subtotal = calcularSubtotal(detalhesDoPedido.get(i),
+					detalhesDoPedido.get(i).getProduto().getIdProduto());
 
-		calcularTotalDoPedido(idDoPedido, subtotal);
+			calcularTotalDoPedido(idDoPedido, subtotal);
+			
+			detalhesDoPedido.get(i).setPedido(pedidoNoBancoDeDados);
+			
+			listaDetalhesSalvos.add(detalhesDoPedido.get(i));
+		}
 
-		return detalhePedidoRepository.save(detalheDoPedido);
+		return detalhePedidoRepository.saveAll(listaDetalhesSalvos);
 	}
 
 
 }
+;;

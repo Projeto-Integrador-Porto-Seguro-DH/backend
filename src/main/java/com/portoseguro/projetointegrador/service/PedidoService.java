@@ -1,6 +1,5 @@
 package com.portoseguro.projetointegrador.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +46,17 @@ public class PedidoService {
 		return pedidoPorId;
 
 	}
+	
+	public Optional<List<Pedido>> encontrarPorUsuario(Long idUsuario){
+		List<Pedido> pedidosDoUsuario = usuarioRepository.findById(idUsuario).get().getPedidoUsuario();
+		
+		if(pedidosDoUsuario.isEmpty()) {
+			return Optional.empty();
+		}
+		
+		return Optional.of(pedidosDoUsuario);
+		
+	}
 
 	public boolean verificarPedidoExistente(Pedido pedido) {
 		Optional<Pedido> pedidoExistente = pedidoRepository.findById(pedido.getIdPedido());
@@ -59,26 +69,17 @@ public class PedidoService {
 	}
 
 	@Transactional
-	public Pedido cadastrarPedido(long idUsuario, Pedido pedido, List<DetalhePedido> detalhes) {
+	public Pedido cadastrarPedido(Pedido pedido) {
 
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
-		
-		Usuario usuario = buscarUsuario(idUsuario).get();
 
+		Usuario usuario = buscarUsuario(pedido.getUsuario().getIdUsuario()).get();
 		pedido.setUsuario(usuario);
-		
-		Pedido pedidoSalvo = pedidoRepository.save(pedido);
-		
-		List<DetalhePedido> listaDetalhesSalvos = new ArrayList<DetalhePedido>();
 
-		for (int i = 0; i < detalhes.size(); i++) {
-			DetalhePedido detalheSalvo = detalhePedidoService.cadastarDetalhes(
-					detalhes.get(i),
-					pedidoSalvo.getIdPedido());
-			listaDetalhesSalvos.add(detalheSalvo);
-		}
-		
-		pedidoSalvo.setDetalhePedido(listaDetalhesSalvos);
+		Pedido pedidoSalvo = pedidoRepository.save(pedido);
+
+		pedidoSalvo.setDetalhePedido(
+				detalhePedidoService.cadastarDetalhes(pedido.getDetalhePedido(), pedidoSalvo.getIdPedido()));
 
 		return pedidoRepository.save(pedidoSalvo);
 

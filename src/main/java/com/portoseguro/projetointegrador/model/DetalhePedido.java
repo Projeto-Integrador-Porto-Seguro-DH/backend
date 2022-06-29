@@ -38,7 +38,6 @@ public class DetalhePedido {
 	// RELACIONAMENTOS
 
 	@ManyToOne
-	@JsonIgnoreProperties("detalhePedido")
 	private Pedido pedido;
 
 	@ManyToOne
