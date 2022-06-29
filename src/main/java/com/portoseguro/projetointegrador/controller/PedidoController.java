@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
-import com.portoseguro.projetointegrador.repository.DetalhePedidoRepository;
 import com.portoseguro.projetointegrador.service.PedidoService;
 
 @RestController
@@ -27,14 +25,6 @@ public class PedidoController {
 
 	@Autowired
 	private PedidoService pedidoService;
-	
-	@Autowired
-	private DetalhePedidoRepository detalhes;
-	
-	@GetMapping("/detalhe")
-	public ResponseEntity<List<DetalhePedido>> econtrarDetalhe(){
-		return ResponseEntity.ok(detalhes.findAll());
-	}
 
 	@GetMapping
 	public ResponseEntity<List<Pedido>> encontrarPedidos() {
