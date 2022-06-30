@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 
@@ -19,15 +18,12 @@ public class SwaggerConfig {
 	public OpenAPI springProjetoIntegradorOpenAPI() {
 		return new OpenAPI()
 				.info(new Info()
-					.title("Projeto Integrador")
+					.title("Projeto Integrador - Backend")
 					.description("Projeto desenvolvido para a finalização do curso de Desenvolvedor Web Full Stack Java")
 					.version("v.0.1")
-				.license(new License()
-					.name("")
-					.url("http://"))
 				.contact(new Contact()
-					.name("Nome do contato")
-					.email("email do contato")))
+					.name("Contact us through our Whatsapp group")
+					.url("https://chat.whatsapp.com/EV7Ev7KRoj8JagmkalNOda")))
 				.externalDocs(new ExternalDocumentation()
 					.description("GitHub")
 					.url("https://github.com/Projeto-Integrador-Porto-Seguro-DH/backend"));

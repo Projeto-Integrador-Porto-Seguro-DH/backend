@@ -10,8 +10,6 @@ public class LoginDTO {
 	private Long idUsuario;
 	private String nomeUsuario;
 	private String sobrenomeUsuario;
-	@SuppressWarnings("unused")
-	private String nomeCompleto;
 	private String emailUsuario;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String senhaUsuario;
@@ -41,10 +39,6 @@ public class LoginDTO {
 
 	public void setSobrenomeUsuario(String sobrenomeUsuario) {
 		this.sobrenomeUsuario = sobrenomeUsuario;
-	}
-
-	public String getNomeCompleto() {
-		return getNomeUsuario() + " " + getSobrenomeUsuario();
 	}
 
 	public String getEmailUsuario() {
