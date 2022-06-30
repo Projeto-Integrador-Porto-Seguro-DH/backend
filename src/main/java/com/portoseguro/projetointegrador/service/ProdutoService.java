@@ -64,9 +64,10 @@ public class ProdutoService {
 	@Transactional
 	public Produto cadastrarProduto(Produto produto) {
 		Optional<Produto> produtoExistente = produtosRepository.findByNomeProdutoIgnoreCase(produto.getNomeProduto());
-		
+
 		if (!produtoExistente.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Produto " + produto.getNomeProduto() + " já existe!");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Produto " + produto.getNomeProduto() + " já existe!");
 		}
 
 		return produtosRepository.save(produto);
@@ -76,35 +77,43 @@ public class ProdutoService {
 	public Produto atualizarProduto(Produto produto) {
 
 		if (!verificarProdutoExistente(produto)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto" + produto.getNomeProduto() + "não existe!");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+					"Produto" + produto.getNomeProduto() + "não existe!");
 		}
 
 		Produto produtoNoBD = produtosRepository.findById(produto.getIdProduto()).get();
 
-		if (produtoNoBD.getNomeProduto() != produto.getNomeProduto()) {
+		if (produto.getNomeProduto() != null && produtoNoBD.getNomeProduto() != produto.getNomeProduto()) {
 			produtoNoBD.setNomeProduto(produto.getNomeProduto());
 		}
-		
-		if (produtoNoBD.getDescricaoProduto() != produto.getDescricaoProduto()) {
+
+		if (produto.getDescricaoProduto() != null
+				&& produtoNoBD.getDescricaoProduto() != produto.getDescricaoProduto()) {
 			produtoNoBD.setDescricaoProduto(produto.getDescricaoProduto());
 		}
-		
-		if (produtoNoBD.getPrecoUnitarioProduto() != produto.getPrecoUnitarioProduto()) {
+
+		if (produto.getPrecoUnitarioProduto() != null
+				&& produtoNoBD.getPrecoUnitarioProduto() != produto.getPrecoUnitarioProduto()) {
 			produtoNoBD.setPrecoUnitarioProduto(produto.getPrecoUnitarioProduto());
 		}
-		
+
 		if (produtoNoBD.getEstoqueProduto() != produto.getEstoqueProduto()) {
 			produtoNoBD.setEstoqueProduto(produto.getEstoqueProduto());
 		}
-		
+
 		if (produtoNoBD.isProdutoDisponivel() != produto.isProdutoDisponivel()) {
 			produtoNoBD.setProdutoDisponivel(produto.isProdutoDisponivel());
 		}
-		
-		if(produtoNoBD.getCategoria().getIdCategoria() != produto.getCategoria().getIdCategoria()) {
+
+		if (produto.getCategoria() != null
+				&& produtoNoBD.getCategoria().getIdCategoria() != produto.getCategoria().getIdCategoria()) {
 			produtoNoBD.setCategoria(produto.getCategoria());
 		}
-		
+
+		if (produto.getFotoProduto() != null && produtoNoBD.getFotoProduto() != produto.getFotoProduto()) {
+			produtoNoBD.setFotoProduto(produto.getFotoProduto());
+		}
+
 		return produtosRepository.save(produtoNoBD);
 
 	}
