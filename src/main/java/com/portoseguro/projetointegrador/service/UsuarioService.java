@@ -59,6 +59,8 @@ public class UsuarioService {
 		verificarSenhaValida(usuario.getSenhaUsuario());
 
 		usuario.setSenhaUsuario(criptografarSenha(usuario.getSenhaUsuario()));
+		
+		usuario.setAdmin(false);
 
 		return usuarioRepository.save(usuario);
 	}
@@ -102,9 +104,9 @@ public class UsuarioService {
 			String senhaAntiga = usuarioNoBD.getSenhaUsuario();
 
 			/*
-			 * PARA ATUALIZAR A SENHA É NECESSÁRIO ENVIAR A SENHA ATUAL JUNTO
-			 * ESTE if COMPARA SE A SENHA ENVIADA ESTÁ CORRETA 
-			*/
+			 * PARA ATUALIZAR A SENHA É NECESSÁRIO ENVIAR A SENHA ATUAL JUNTO ESTE if
+			 * COMPARA SE A SENHA ENVIADA ESTÁ CORRETA
+			 */
 			if (!compararSenhas(senhaDeComparacao, senhaAntiga)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha atual está incorreta!");
 			}
@@ -112,7 +114,7 @@ public class UsuarioService {
 			if (compararSenhas(senhaNova, senhaAntiga)) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A nova senha deve ser diferente da antiga.");
 			}
-			
+
 			verificarSenhaValida(usuario.getSenhaUsuario());
 
 			usuarioNoBD.setSenhaUsuario(criptografarSenha(senhaNova));
@@ -120,47 +122,53 @@ public class UsuarioService {
 		}
 
 		// DADOS PESSOAIS
-		if (usuario.getNomeUsuario() != usuarioNoBD.getNomeUsuario()) {
+		if (usuario.getNomeUsuario() != null && usuario.getNomeUsuario() != usuarioNoBD.getNomeUsuario()) {
 			usuarioNoBD.setNomeUsuario(usuario.getNomeUsuario());
 		}
-		if (usuario.getSobrenomeUsuario() != usuarioNoBD.getSobrenomeUsuario()) {
+		if (usuario.getSobrenomeUsuario() != null
+				&& usuario.getSobrenomeUsuario() != usuarioNoBD.getSobrenomeUsuario()) {
 			usuarioNoBD.setSobrenomeUsuario(usuario.getSobrenomeUsuario());
 		}
-		if (usuario.getDataDeNascimento() != usuarioNoBD.getDataDeNascimento()) {
+		if (usuario.getDataDeNascimento() != null
+				&& usuario.getDataDeNascimento() != usuarioNoBD.getDataDeNascimento()) {
 			usuarioNoBD.setDataDeNascimento(usuario.getDataDeNascimento());
 		}
-		if (usuario.getCpfUsuario() != usuarioNoBD.getCpfUsuario()) {
+		if (usuario.getCpfUsuario() != null && usuario.getCpfUsuario() != usuarioNoBD.getCpfUsuario()) {
 			usuarioNoBD.setCpfUsuario(usuario.getCpfUsuario());
 		}
-		if (usuario.getTelefoneUsuario() != usuarioNoBD.getTelefoneUsuario()) {
+		if (usuario.getTelefoneUsuario() != null && usuario.getTelefoneUsuario() != usuarioNoBD.getTelefoneUsuario()) {
 			usuarioNoBD.setTelefoneUsuario(usuario.getTelefoneUsuario());
 		}
-		if (usuario.isCompartilharDadosUsuario() != usuarioNoBD.isCompartilharDadosUsuario()) {
-			usuarioNoBD.setCompartilharDadosUsuario(usuario.isCompartilharDadosUsuario());
-		}
+
+		usuarioNoBD.setCompartilharDadosUsuario(usuario.isCompartilharDadosUsuario());
 
 		// ENDEREÇO
-		if (usuario.getCepEndereco() != usuarioNoBD.getCepEndereco()) {
+		if (usuario.getCepEndereco() != null && usuario.getCepEndereco() != usuarioNoBD.getCepEndereco()) {
 			usuarioNoBD.setCepEndereco(usuario.getCepEndereco());
 		}
-		if (usuario.getLogradouroEndereco() != usuarioNoBD.getLogradouroEndereco()) {
+		if (usuario.getLogradouroEndereco() != null
+				&& usuario.getLogradouroEndereco() != usuarioNoBD.getLogradouroEndereco()) {
 			usuarioNoBD.setLogradouroEndereco(usuario.getLogradouroEndereco());
 		}
-		if (usuario.getNumeroEndereco() != usuarioNoBD.getNumeroEndereco()) {
+		if (usuario.getNumeroEndereco() != null && usuario.getNumeroEndereco() != usuarioNoBD.getNumeroEndereco()) {
 			usuarioNoBD.setNumeroEndereco(usuario.getNumeroEndereco());
 		}
-		if (usuario.getBairroEndereco() != usuarioNoBD.getBairroEndereco()) {
+		if (usuario.getBairroEndereco() != null && usuario.getBairroEndereco() != usuarioNoBD.getBairroEndereco()) {
 			usuarioNoBD.setBairroEndereco(usuario.getBairroEndereco());
 		}
-		if (usuario.getComplementoEndereco() != usuarioNoBD.getComplementoEndereco()) {
+		if (usuario.getComplementoEndereco() != null
+				&& usuario.getComplementoEndereco() != usuarioNoBD.getComplementoEndereco()) {
 			usuarioNoBD.setComplementoEndereco(usuario.getComplementoEndereco());
 		}
-		if (usuario.getCidadeEndereco() != usuarioNoBD.getCidadeEndereco()) {
+		if (usuario.getCidadeEndereco() != null && usuario.getCidadeEndereco() != usuarioNoBD.getCidadeEndereco()) {
 			usuarioNoBD.setCidadeEndereco(usuario.getCidadeEndereco());
 		}
-		if (usuario.getEstadoEndereco() != usuarioNoBD.getEstadoEndereco()) {
+		if (usuario.getEstadoEndereco() != null && usuario.getEstadoEndereco() != usuarioNoBD.getEstadoEndereco()) {
 			usuarioNoBD.setEstadoEndereco(usuario.getEstadoEndereco());
 		}
+
+		// ADMIN
+		usuarioNoBD.setAdmin(usuario.isAdmin());
 
 		return usuarioRepository.save(usuarioNoBD);
 

@@ -66,6 +66,9 @@ public class Usuario {
 
 	@Column(name = "compartilharDados_usuario")
 	private boolean compartilharDadosUsuario;
+	
+	@Column(name = "admin_usuario")
+	private boolean admin;
 
 		// ENDEREÇO
 
@@ -194,6 +197,14 @@ public class Usuario {
 
 	public void setCompartilharDadosUsuario(boolean compartilharDadosUsuario) {
 		this.compartilharDadosUsuario = compartilharDadosUsuario;
+	}
+	
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
 	public String getLogradouroEndereco() {
