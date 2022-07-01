@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.portoseguro.projetointegrador.enums.FormasDePagamentoEnum;
 import com.portoseguro.projetointegrador.enums.StatusPedidoEnum;
 import com.portoseguro.projetointegrador.model.DetalhePedido;
 import com.portoseguro.projetointegrador.model.Pedido;
@@ -76,6 +77,8 @@ public class PedidoService {
 		Usuario usuario = buscarUsuario(pedido.getUsuario().getIdUsuario()).get();
 		pedido.setUsuario(usuario);
 
+		pedido.setFormasDePagamento(FormasDePagamentoEnum.retornarEnum(pedido.getFormasDePagamento().getValue()));
+					
 		Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
 		pedidoSalvo.setDetalhePedido(
@@ -115,5 +118,7 @@ public class PedidoService {
 	public Optional<Usuario> buscarUsuario(long idUsuario) {
 		return usuarioRepository.findById(idUsuario);
 	}
+
+	
 
 }

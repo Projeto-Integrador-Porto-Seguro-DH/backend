@@ -18,4 +18,14 @@ public enum FormasDePagamentoEnum {
 		return this.value;
 	}
 
+	public static FormasDePagamentoEnum retornarEnum(String formaDePagamento) {
+		for(FormasDePagamentoEnum forma : FormasDePagamentoEnum.values()) {
+			if(forma.getValue().equalsIgnoreCase(formaDePagamento)) {
+				return forma;
+			}
+		}
+		
+		
+		return null;
+	}
 }
