@@ -77,7 +77,7 @@ public class PedidoService {
 		Usuario usuario = buscarUsuario(pedido.getUsuario().getIdUsuario()).get();
 		pedido.setUsuario(usuario);
 
-		pedido.setFormasDePagamento(FormasDePagamentoEnum.retornarEnum(pedido.getFormasDePagamento().getValue()));
+//		pedido.setFormasDePagamento(FormasDePagamentoEnum.retornarEnum(pedido.getFormasDePagamento().getValue()));
 					
 		Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
