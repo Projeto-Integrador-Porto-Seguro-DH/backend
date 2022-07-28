@@ -69,10 +69,11 @@ public class UsuarioService {
 		Optional<Usuario> usuarioNoBD = usuarioRepository
 				.findByEmailUsuarioIgnoreCase(usuarioLogin.getEmailUsuario());
 
+		if (usuarioNoBD.isPresent()) {
 		String senhaDigitada = usuarioLogin.getSenhaUsuario();
 		String senhaSalvaNoBD = usuarioNoBD.get().getSenhaUsuario();
 
-		if (usuarioNoBD.isPresent()) {
+
 			if (compararSenhas(senhaDigitada, senhaSalvaNoBD)) {
 
 				usuarioLogin.setToken(
@@ -86,7 +87,7 @@ public class UsuarioService {
 			}
 		}
 
-		return null;
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email e/ou senha digitados estão incorretos!");
 	}
 
 	@Transactional
