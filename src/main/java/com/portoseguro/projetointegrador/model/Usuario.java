@@ -72,7 +72,7 @@ public class Usuario {
 
 		// ENDEREÇO
 
-	@Size(min = 5, max = 255, message = "O campo Endereço deve conter entre 5 e 255 caracteres")
+	@Size(max = 255, message = "O campo Endereço deve conter entre 5 e 255 caracteres")
 	@Column(name = "logradouroEndereco_usuario")
 	private String logradouroEndereco;
 
@@ -82,7 +82,7 @@ public class Usuario {
 	@Column(name = "numeroEndereco_usuario")
 	private String numeroEndereco;
 
-	@Size(min = 2, max = 255, message = "O Bairro deve conter entre 2 e 255 caracteres")
+	@Size(max = 255, message = "O Bairro deve conter entre 2 e 255 caracteres")
 	@Column(name = "bairroEndereco_usuario")
 	private String bairroEndereco;
 
@@ -90,7 +90,7 @@ public class Usuario {
 	@Column(name = "complementoEndereco_usuario")
 	private String complementoEndereco;
 
-	@Size(min = 3, max = 255, message = "A Cidade deve conter conter entre 2 e 255 caracteres")
+	@Size(max = 255, message = "A Cidade deve conter conter entre 2 e 255 caracteres")
 	@Column(name = "cidadeEndereco_usuario")
 	private String cidadeEndereco;
 

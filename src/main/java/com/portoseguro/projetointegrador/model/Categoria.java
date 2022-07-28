@@ -27,11 +27,11 @@ public class Categoria {
 	private Long idCategoria;
 
 	@NotNull(message = "O campo nome precisa ser preenchido")
-	@Size(min = 1, max = 255, message = "O campo nome deve conter no máximo 255 caracteres")
+	@Size(max = 255, message = "O campo nome deve conter no máximo 255 caracteres")
 	@Column(name = "nome_categoria")
 	private String nomeCategoria;
 
-	@Size(min = 1, max = 255, message = "O campo descrição deve conter no máximo 255 caracteres")
+	@Size(max = 255, message = "O campo descrição deve conter no máximo 255 caracteres")
 	@Column(name = "descricao_categoria")
 	private String descricaoCategoria;
 	
