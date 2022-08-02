@@ -22,13 +22,14 @@ https://dafazenda.netlify.app/
 
 ### Pré - requisitos
 - Java
+- MySQL
 - IDE, preferencialmente o Spring Tool Suite (STS)
 
 ## Rodando o backend
 1. Clone o repositório dessa aplicação ou realize o download no formato .zip e descompacte;
 2. Utilizando a IDE de sua preferência, importe o arquivo como Maven;
 3. Para rodar o backend localmente altere, dentro do arquivo application.properties, a primeira linha para spring.profiles.active=dev;
-4. Acesse o localhost:8080 (porta padrão do Tomcat) para acessar a documentação do Swagger.
+4. Acesse o localhost:8080 (porta padrão do Tomcat) para acessar a documentação do Swagger (login e senha: root).
 
 ## Tecnologias
 - Java
