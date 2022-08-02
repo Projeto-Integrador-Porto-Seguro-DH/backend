@@ -1,7 +1,9 @@
 # daFazenda
 
 ## Descrição do projeto
-Texto
+API desenvolvida durante o programa Start da Porto Seguro. Foi desenvolvida a aplicação de um ecommerce para a cooperativa fictícia daFazenda, que trabalha com pequenos produtores rurais de alimentos orgânicos e sustentáveis.
+### Objetivo
+O projeto tem como finalidade aumentar a circulação dos produtos no mercado, facilitando a conexão de potenciais consumidores com os produtos ofertados pela cooperativa, efetivando um maior número de vendas. Além de permitir o gerenciamento do estoque por meio do cadastro de produtos na plataforma.
 
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
@@ -10,16 +12,22 @@ Texto
 - [x] Autenticação do usuário
 - [x] Cadastro de cliente
 - [x] Cadastro de produtos
+- [x] Listagem de produtos
+- [x] Listagem de categorias
+- [x] Pesquisa por produto
+- [ ] Listagem de usuários
 
 ## Deploy da aplicação
 https://dafazenda.netlify.app/
 
 ### Pré - requisitos
+- Java
+- IDE, preferencialmente o Spring Tool Suite (STS)
 
 ## Rodando o backend
 1. Clone o repositório dessa aplicação ou realize o download no formato .zip e descompacte;
 2. Utilizando a IDE de sua preferência, importe o arquivo como Maven;
-3. Para rodar o backend localmente altere, dentro do arquivo application.properties, o spring.profiles.active para dev;
+3. Para rodar o backend localmente altere, dentro do arquivo application.properties, a primeira linha para spring.profiles.active=dev;
 4. Acesse o localhost:8080 (porta padrão do Tomcat) para acessar a documentação do Swagger.
 
 ## Tecnologias
